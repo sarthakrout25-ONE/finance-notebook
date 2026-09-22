@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset ="UTF-8">
+    <meta name="viewport"
+        content ="width=device-width, initial-scale=1.0">
+    <title>My Finance Notebook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="top-header">
+            <h1>My Finance Notebook</h1>
+            <p>Your personal money tracker</p>
+        </header>
+        <main id="homeSection">
+        <!-- Toatl Money -->
+         <section class="balance-section">
+            <p class="balance-label">Total Money</p>
+            <h2 id="totalBalance">₹0</h2>
+            <div class="accounts">
+
+                <div class="account-card">
+                    <span>🏦</span>
+                    <div>
+                        <p>ACC-1</p>
+                        <h3 id="acc1Balance">₹0</h3>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <span>🏦</span>
+                    <div>
+                        <p>ACC-2</p>
+                        <h3 id="acc2Balance">₹0</h3>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <span>💵</span>
+                    <div>
+                        <p>Cash</p>
+                        <h3 id="cashBalance">₹0</h3>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- Add Button -->
+        <button class="add-button" id="addButton">
+            + Edit
+        </button>
+        <!-- Add Transaction Menu -->
+
+        <div class="transaction-menu" id="transactionMenu">
+
+            <div class="transaction-box">
+
+                <h2>Add Transaction</h2>
+
+                <button class="transaction-option" id="expenseOption">
+                    💸 Expense
+                </button>
+
+                <button class="transaction-option" id="incomeOption">
+                    💰 Income
+                </button>
+
+                <button class="transaction-option" id="transferOption">
+                    🔄 Transfer
+                </button>
+
+                <button class="cancel-button" id="cancelTransaction">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+        <!-- Expense Form -->
+
+        <div class="expense-form" id="expenseForm">
+
+            <div class="expense-box">
+
+                <h2>Add Expense</h2>
+
+                <label>Amount</label>
+                <input
+                    type="number"
+                    id="expenseAmount"
+                    placeholder="₹0"
+                    min="0"
+                    step="0.01"
+                >
+
+
+                <label>Category</label>
+                <select id="expenseCategory">
+                    <option value="Food">🍔 Food</option>
+                    <option value="Travel">🚌 Travel</option>
+                    <option value="College">🎓 College</option>
+                    <option value="Shopping">🛒 Shopping</option>
+                    <option value="Entertainment">🎮 Entertainment</option>
+                    <option value="Recharge">📱 Recharge</option>
+                    <option value="Bills">🏠 Bills</option>
+                    <option value="Other">📦 Other</option>
+                </select>
+
+
+                <label>Account</label>
+                <select id="expenseAccount">
+                    <option value="acc1">ACC-1</option>
+                    <option value="acc2">ACC-2</option>
+                    <option value="cash">Cash</option>
+                </select>
+
+
+                <label>Date</label>
+                <input
+                    type="date"
+                    id="expenseDate"
+                >
+
+
+                <label>Note</label>
+                <input
+                    type="text"
+                    id="expenseNote"
+                    placeholder="Optional"
+                >
+
+
+                <button id="saveExpense">
+                    Save Expense
+                </button>
+
+                <button id="cancelExpense">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+        <!-- Income Form -->
+
+        <div class="income-form" id="incomeForm">
+
+            <div class="income-box">
+
+                <h2>Add Income</h2>
+
+                <label>Amount</label>
+                <input
+                    type="number"
+                    id="incomeAmount"
+                    placeholder="₹0"
+                    min="0"
+                    step="0.01"
+                >
+
+
+                <label>Source</label>
+                <select id="incomeSource">
+                    <option value="Salary">💼 Salary</option>
+                    <option value="Received">💰 Received</option>
+                    <option value="Pocket Money">👛 Pocket Money</option>
+                    <option value="Refund">↩️ Refund</option>
+                    <option value="College">🎓 College</option>
+                    <option value="Other">📦 Other</option>
+                </select>
+
+
+                <label>Account</label>
+                <select id="incomeAccount">
+                    <option value="acc1">ACC-1</option>
+                    <option value="acc2">ACC-2</option>
+                    <option value="cash">Cash</option>
+                </select>
+
+
+                <label>Date</label>
+                <input
+                    type="date"
+                    id="incomeDate"
+                >
+
+
+                <label>Note</label>
+                <input
+                    type="text"
+                    id="incomeNote"
+                    placeholder="Optional"
+                >
+
+
+                <button id="saveIncome">
+                    Save Income
+                </button>
+
+                <button id="cancelIncome">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+        <!-- Transfer Form -->
+
+        <div class="transfer-form" id="transferForm">
+
+            <div class="transfer-box">
+
+                <h2>Transfer Money</h2>
+
+                <label>Amount</label>
+                <input
+                    type="number"
+                    id="transferAmount"
+                    placeholder="₹0"
+                    min="0"
+                    step="0.01"
+                >
+
+                <label>From Account</label>
+                <select id="transferFrom">
+                    <option value="acc1">ACC-1</option>
+                    <option value="acc2">ACC-2</option>
+                    <option value="cash">Cash</option>
+                </select>
+
+                <label>To Account</label>
+                <select id="transferTo">
+                    <option value="acc1">ACC-1</option>
+                    <option value="acc2">ACC-2</option>
+                    <option value="cash">Cash</option>
+                </select>
+
+                <label>Date</label>
+                <input type="date" id="transferDate">
+
+                <label>Note</label>
+                <input
+                    type="text"
+                    id="transferNote"
+                    placeholder="Optional"
+                >
+
+                <button id="saveTransfer">
+                    Transfer Money
+                </button>
+
+                <button id="cancelTransfer">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+        
+        <!-- Summary -->
+        <section class="summary">
+            <div class="summary-card">
+                <p>Total Expense</p>
+                <h3 id="totalExpense">₹0</h3>
+            </div>
+            <div class="summary-card">
+                <p>Total Income</p>
+                <h3 id="totalIncome">₹0</h3>
+            </div>
+        </section>
+        <!-- Recent Transaction -->
+        <section class="section">
+            <div class="section-heading">
+                <h2>Recent Transaction</h2>
+                <button id="viewHistoryButton">View All</button>
+            </div>
+            <div id="recentTransactions" class="empty-box">
+                <p>No transaction yet</p>
+            </div>
+        </section>
+        <!-- Money Owed -->
+         <section class="section">
+            <div class="section-heading">
+                <h2>🤝 Money Owed</h2>
+                <button id="viewOwedButton">View All</button>
+            </div>
+            <div class="owed-summary">
+                <div>
+                    <p>I Have To Give</p>
+                    <strong id="moneyToGive">₹0</strong>
+                </div>
+                <div>
+                    <p>I Have To Receive</p>
+                    <strong id="moneyToReceive">₹0</strong>
+                </div>
+            </div>
+        </section>
+        <!-- Wishlist -->
+         <section class="section">
+            <div class="section-heading">
+                <h2>🛍️ Wishlist</h2>
+                <button id="viewWishlistButton">View All</button>
+            </div>
+            <div class="wishlist-summary">
+                <p id="wishlistCount">0 items</p>
+                <strong id="homeWishlistTotal">₹0</strong>
+            </div>
+        </section>
+        </main>
+        <!-- History Section -->
+
+        <section class="history-section" id="historySection">
+
+            <div class="section-heading">
+                <h2>📋 Transaction History</h2>
+            </div>
+            <!-- History Search & Filter -->
+
+            <div class="history-controls">
+
+                <input
+                    type="text"
+                    id="historySearchInput"
+                    placeholder="🔎 Search transactions..."
+                >
+
+                <select id="historyFilter">
+                    <option value="all">All Transactions</option>
+                    <option value="expense">Expenses</option>
+                    <option value="income">Income</option>
+                    <option value="transfer">Transfers</option>
+                </select>
+
+            </div>
+
+            <div id="historyTransactions" class="history-list">
+                <p>No transactions yet</p>
+            </div>
+
+        </section>
+        <!-- Categories Section -->
+        <section class="categories-section" id="categoriesSection">
+
+            <div class="section-heading">
+                <h2>📊 Categories</h2>
+            </div>
+            <div class="monthly-overview">
+                <h3>This Month</h3>
+
+                <div class="monthly-stats">
+                    <div>
+                        <p>Total Spent</p>
+                        <strong id="monthlyExpense">₹0</strong>
+                    </div>
+
+                    <div>
+                        <p>Transactions</p>
+                        <strong id="monthlyTransactions">0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-list" id="categoryList">
+
+                <div class="category-card">
+                    <div>
+                        <strong>🍔 Food</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>🚌 Travel</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>🎓 College</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>🛍️ Shopping</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>🎬 Entertainment</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>📱 Recharge</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>🧾 Bills</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+                <div class="category-card">
+                    <div>
+                        <strong>📦 Other</strong>
+                        <p>₹0 spent</p>
+                    </div>
+                    <span>₹0</span>
+                </div>
+
+            </div>
+            <div class="category-chart">
+                <h3>Spending Overview</h3>
+
+                <div id="categoryChart"></div>
+            </div>
+
+        </section>
+        <!-- Wishlist Section -->
+        <section class="wishlist-section" id="wishlistSection">
+
+            <div class="section-heading">
+                <h2>🛒 Wishlist</h2>
+            </div>
+
+            <button class="add-wishlist-button" id="addWishlistButton">
+                + Add Item
+            </button>
+            <div class="wishlist-summary">
+                <p>Wishlist Total</p>
+                <strong id="wishlistTotal">₹0</strong>
+            </div>
+            <div class="wishlist-form" id="wishlistForm">
+
+                <input
+                    type="text"
+                    id="wishlistName"
+                    placeholder="Product name"
+                >
+
+                <input
+                    type="number"
+                    id="wishlistPrice"
+                    placeholder="Price"
+                    min="0"
+                    step="0.01"
+                >
+
+                <input
+                    type="url"
+                    id="wishlistLink"
+                    placeholder="Product link (optional)"
+                >
+
+                <div class="wishlist-form-buttons">
+
+                    <button type="button" id="saveWishlistButton">
+                        Save Item
+                    </button>
+
+                    <button type="button" id="cancelWishlistButton">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="wishlist-list" id="wishlistList">
+
+                <p class="wishlist-empty">
+                    Your wishlist is empty.
+                </p>
+
+            </div>
+
+        </section>
+        <section class="owed-section" id="owedSection">
+
+            <div class="section-heading">
+                <h2>💰 Money Owed</h2>
+            </div>
+
+            <div class="owed-summary">
+
+                <div class="owed-card">
+                    <p>I Have To Give</p>
+                    <h3 id="moneyGiveTotal">₹0</h3>
+                </div>
+
+                <div class="owed-card">
+                    <p>I Have To Receive</p>
+                    <h3 id="moneyReceiveTotal">₹0</h3>
+                </div>
+
+            </div>
+
+            <button class="add-owed-button" id="addOwedButton">
+                + Add
+            </button>
+            <div class="owed-form" id="owedForm">
+
+                <input
+                    type="text"
+                    id="owedPerson"
+                    placeholder="Person name"
+                >
+
+                <input
+                    type="number"
+                    id="owedAmount"
+                    placeholder="Amount"
+                    min="0"
+                >
+
+                <select id="owedType">
+                    <option value="give">I Have To Give</option>
+                    <option value="receive">I Have To Receive</option>
+                </select>
+
+                <input
+                    type="text"
+                    id="owedReason"
+                    placeholder="Reason (optional)"
+                >
+
+                <input
+                    type="date"
+                    id="owedDate"
+                >
+
+                <div class="owed-form-buttons">
+                    <button id="saveOwed">Save</button>
+                    <button id="cancelOwed">Cancel</button>
+                </div>
+
+            </div>
+
+            <div id="owedList" class="owed-list">
+                <p>No money owed</p>
+            </div>
+            <button id="openBackupButton" class="more-option">
+                💾 Backup & Restore
+            </button>
+            <button id="openPinButton" class="more-option">
+                🔐 Privacy Lock
+            </button>
+            
+        </section>
+        <!-- Privacy / PIN Lock -->
+        <section class="pin-section" id="pinSection">
+
+            <div class="section-heading">
+                <h2>🔐 Privacy Lock</h2>
+            </div>
+
+            <div class="pin-card">
+
+                <h3>Set your PIN</h3>
+
+                <p>
+                    Create a PIN to protect your Finance Notebook.
+                </p>
+
+                <input
+                    type="password"
+                    id="pinInput"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="Enter PIN"
+                >
+
+                <input
+                    type="password"
+                    id="confirmPinInput"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="Confirm PIN"
+                >
+
+                <button id="savePinBtn">
+                    🔒 Save PIN
+                </button>
+
+            </div>
+
+        </section>
+        <!-- Backup & Restore -->
+
+        <section class="backup-section" id="backupSection">
+
+            <div class="section-heading">
+                <h2>💾 Backup & Restore</h2>
+            </div>
+
+            <div class="backup-card">
+
+                <h3>Backup your notebook</h3>
+
+                <p>
+                    Save all your finance data as a backup file.
+                </p>
+
+                <button id="exportBackupBtn">
+                    📤 Export Backup
+                </button>
+
+                <hr>
+
+                <h3>Restore your notebook</h3>
+
+                <p>
+                    Restore your finance data from a backup file.
+                </p>
+
+                <input
+                    type="file"
+                    id="importBackupInput"
+                    accept=".json"
+                >
+
+                <button id="importBackupBtn">
+                    📥 Import Backup
+                </button>
+
+            </div>
+
+        </section>
+<!-- Statistics Section -->
+<section class="statistics-section" id="statisticsSection">
+
+    <div class="section-heading">
+        <h2>📊 Statistics</h2>
+    </div>
+
+    <!-- Overview -->
+    <div class="stats-overview">
+
+        <div class="stats-card">
+            <p>💰 Total Income</p>
+            <strong id="statsIncome">₹0</strong>
+        </div>
+
+        <div class="stats-card">
+            <p>💸 Total Expense</p>
+            <strong id="statsExpense">₹0</strong>
+        </div>
+
+        <div class="stats-card">
+            <p>📈 Money Flow</p>
+            <strong id="statsFlow">₹0</strong>
+        </div>
+
+    </div>
+
+    <!-- Spending by Category -->
+    <div class="stats-box">
+
+        <h3>💸 Spending by Category</h3>
+
+        <div class="category-chart">
+
+            <div class="category-donut">
+                <div class="category-donut-center">
+                    <span>Total</span>
+                    <strong id="categoryTotalAmount">₹0</strong>
+                </div>
+            </div>
+
+            <div id="categoryChartLegend" class="category-chart-legend">
+                <!-- Chart categories will appear here -->
+            </div>
+            <div
+                id="categoryDetail"
+                class="category-detail"
+                style="display: none;"
+            >
+                <h4 id="categoryDetailName"></h4>
+
+                <p>
+                    Spent:
+                    <strong id="categoryDetailAmount">₹0</strong>
+                </p>
+
+                <p>
+                    Percentage:
+                    <strong id="categoryDetailPercentage">0%</strong>
+                </p>
+
+                <p>
+                    Transactions:
+                    <strong id="categoryDetailTransactions">0</strong>
+                </p>
+            </div>
+
+        </div>
+
+        <div id="statsCategoryList">
+            <!-- Categories will appear here -->
+        </div>
+
+    </div>
+
+    <!-- Monthly Expenses -->
+    <div class="stats-box">
+
+        <h3>📅 Monthly Expenses</h3>
+
+        <div id="statsMonthlyChart" class="monthly-chart">
+            <!-- Monthly chart will appear here -->
+        </div>
+
+        <div id="statsMonthlyList">
+            <!-- Monthly data will appear here -->
+        </div>
+
+    </div>
+
+    <!-- Account Spending -->
+    <div class="stats-box">
+
+        <h3>🏦 Account Spending</h3>
+
+        <div id="statsAccountList">
+            <!-- Account spending will appear here -->
+        </div>
+
+    </div>
+
+</section>
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" id="homeButton">
+                <span>🏠</span>
+                <small>Home</small>
+            </button>
+            <button class="nav-item" id="statsButton">
+                <span>📊</span>
+                <small>Stats</small>
+            </button>
+            <button class="nav-item" id="historyButton">
+                <span>📋</span>
+                <small>History</small>
+            </button>
+            <button class="nav-item" id="wishlistButton">
+                <span>🛒</span>
+                <small>Wishlist</small>
+            </button>
+            <button class="nav-item" id="moreButton">
+                <span>⚙️</span>
+                <small>More</small>
+            </button>
+        </nav>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
