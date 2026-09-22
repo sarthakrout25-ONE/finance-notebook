@@ -1996,6 +1996,11 @@ function displayOwedEntries() {
                 <button class="owed-paid-button" data-id="${entry.id}">
                     ${entry.paid ? "✅ Paid" : "⏳ Unpaid"}
                 </button>
+                
+                <button class="edit-owed-button" data-id="${entry.id}">
+                    ✏️ Edit
+                </button>
+                
                 <button class="delete-owed-button" data-id="${entry.id}">
                     🗑️
                 </button>
@@ -2670,31 +2675,3 @@ viewHistoryButton.addEventListener("click", function () {
 
     window.scrollTo(0, 0);
 });
-/* =================================
-   MONEY OWED — EDIT BUTTON
-   ================================= */
-
-.edit-owed-button {
-    background: #050505 !important;
-    color: #00e5ff !important;
-
-    border: 1px solid #00e5ff !important;
-    border-radius: 7px !important;
-
-    padding: 8px 14px !important;
-    margin-top: 10px;
-
-    font-family: "Courier New", monospace !important;
-    font-size: 13px !important;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    box-shadow: none !important;
-    text-shadow: none !important;
-}
-
-.edit-owed-button:hover {
-    background: #00e5ff !important;
-    color: #000000 !important;
-}
