@@ -2035,6 +2035,48 @@ function displayOwedEntries() {
         });
         const deleteOwedButton =
             item.querySelector(".delete-owed-button");
+        const editOwedButton =
+            item.querySelector(".edit-owed-button");
+        
+        editOwedButton.addEventListener("click", function () {
+        
+            let entries =
+                JSON.parse(localStorage.getItem("financeOwed")) || [];
+        
+            const selectedEntry = entries.find(function (e) {
+                return e.id === entry.id;
+            });
+        
+            if (!selectedEntry) {
+                return;
+            }
+        
+            const newAmount = prompt(
+                "Enter the remaining amount:",
+                selectedEntry.amount
+            );
+        
+            if (newAmount === null) {
+                return;
+            }
+        
+            const amount = Number(newAmount);
+        
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount");
+                return;
+            }
+        
+            selectedEntry.amount = amount;
+        
+            localStorage.setItem(
+                "financeOwed",
+                JSON.stringify(entries)
+            );
+        
+            displayOwedEntries();
+            updateOwedTotals();
+        });
 
         deleteOwedButton.addEventListener("click", function () {
 
