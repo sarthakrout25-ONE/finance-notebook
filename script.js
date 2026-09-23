@@ -2011,34 +2011,6 @@ function displayOwedEntries() {
         const paidButton = item.querySelector(".owed-paid-button");
 
         paidButton.addEventListener("click", function () {
-
-            let entries =
-                JSON.parse(localStorage.getItem("financeOwed")) || [];
-
-            const selectedEntry = entries.find(function (e) {
-                return e.id === entry.id;
-            });
-
-            if (!selectedEntry) {
-                return;
-            }
-
-            selectedEntry.paid = !selectedEntry.paid;
-
-            localStorage.setItem(
-                "financeOwed",
-                JSON.stringify(entries)
-            );
-
-            displayOwedEntries();
-            updateOwedTotals();
-        });
-        const deleteOwedButton =
-            item.querySelector(".delete-owed-button");
-        const editOwedButton =
-            item.querySelector(".edit-owed-button");
-        
-        editOwedButton.addEventListener("click", function () {
         
             let entries =
                 JSON.parse(localStorage.getItem("financeOwed")) || [];
@@ -2051,56 +2023,141 @@ function displayOwedEntries() {
                 return;
             }
         
-            const newAmount = prompt(
-                "Enter the remaining amount:",
-                selectedEntry.amount
-            );
-        
-            if (newAmount === null) {
+            // If already paid, do nothing for now
+            if (selectedEntry.paid) {
                 return;
             }
         
-            const amount = Number(newAmount);
+            // Create payment popup
+            const overlay = document.createElement("div");
+            overlay.className = "payment-account-popup";
         
-            if (!amount || amount <= 0) {
-                alert("Please enter a valid amount");
-                return;
-            }
+            const title =
+                selectedEntry.type === "receive"
+                    ? "💰 Payment Received"
+                    : "💸 Payment Made";
         
-            selectedEntry.amount = amount;
+            const label =
+                selectedEntry.type === "receive"
+                    ? "Paid to"
+                    : "Paid from";
         
-            localStorage.setItem(
-                "financeOwed",
-                JSON.stringify(entries)
-            );
+            overlay.innerHTML = `
+                <div class="payment-account-box">
         
-            displayOwedEntries();
-            updateOwedTotals();
-        });
-
-        deleteOwedButton.addEventListener("click", function () {
-
-            const confirmed =
-                confirm("Delete this money owed entry?");
-
-            if (!confirmed) {
-                return;
-            }
-
-            let entries =
-                JSON.parse(localStorage.getItem("financeOwed")) || [];
-
-            entries = entries.filter(function (e) {
-                return e.id !== entry.id;
+                    <h2>${title}</h2>
+        
+                    <p>
+                        Amount:
+                        <strong>₹${Number(selectedEntry.amount).toLocaleString("en-IN")}</strong>
+                    </p>
+        
+                    <label>${label}</label>
+        
+                    <select id="paymentAccountSelect">
+                        <option value="acc1">ACC-1</option>
+                        <option value="acc2">ACC-2</option>
+                        <option value="cash">Cash</option>
+                    </select>
+        
+                    <button id="confirmPaymentButton">
+                        ✓ Confirm Payment
+                    </button>
+        
+                    <button id="cancelPaymentButton">
+                        Cancel
+                    </button>
+        
+                </div>
+            `;
+        
+            document.body.appendChild(overlay);
+        
+            const confirmPaymentButton =
+                overlay.querySelector("#confirmPaymentButton");
+        
+            const cancelPaymentButton =
+                overlay.querySelector("#cancelPaymentButton");
+        
+            confirmPaymentButton.addEventListener("click", function () {
+        
+                const account =
+                    overlay.querySelector("#paymentAccountSelect").value;
+        
+                const amount = Number(selectedEntry.amount);
+        
+                // Money received → add to account
+                if (selectedEntry.type === "receive") {
+        
+                    accounts[account] += amount;
+        
+                }
+        
+                // Money given → remove from account
+                else {
+        
+                    if (amount > accounts[account]) {
+                        alert("Insufficient balance in this account.");
+                        return;
+                    }
+        
+                    accounts[account] -= amount;
+                }
+        
+                saveAccounts();
+        
+                // Record payment as a transaction
+                let transactions =
+                    JSON.parse(localStorage.getItem("financeTransactions")) || [];
+        
+                const paymentTransaction = {
+                    id: Date.now(),
+                    type:
+                        selectedEntry.type === "receive"
+                            ? "income"
+                            : "expense",
+                    amount: amount,
+                    source:
+                        selectedEntry.type === "receive"
+                            ? "Money Owed"
+                            : undefined,
+                    category:
+                        selectedEntry.type === "give"
+                            ? "Money Owed"
+                            : undefined,
+                    account: account,
+                    date: new Date().toISOString().split("T")[0],
+                    note: selectedEntry.person
+                };
+        
+                transactions.push(paymentTransaction);
+        
+                localStorage.setItem(
+                    "financeTransactions",
+                    JSON.stringify(transactions)
+                );
+        
+                selectedEntry.paid = true;
+                selectedEntry.paidAccount = account;
+        
+                localStorage.setItem(
+                    "financeOwed",
+                    JSON.stringify(entries)
+                );
+        
+                overlay.remove();
+        
+                displayOwedEntries();
+                updateOwedTotals();
+                updateTotalBalance();
+                updateTotalIncome();
+                updateTotalExpense();
+                displayRecentTransactions();
             });
-
-            localStorage.setItem(
-                "financeOwed",
-                JSON.stringify(entries)
-            );
-
-            displayOwedEntries();
-            updateOwedTotals();
+        
+            cancelPaymentButton.addEventListener("click", function () {
+                overlay.remove();
+            });
         });
     });
 }
