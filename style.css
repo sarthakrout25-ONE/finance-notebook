@@ -1593,3 +1593,109 @@ body,
     top: 14px;
     right: 14px;
 }
+/* =================================
+   MONEY OWED — PAYMENT POPUP
+   ================================= */
+
+.payment-account-popup {
+    position: fixed !important;
+    inset: 0 !important;
+
+    z-index: 99999 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: rgba(0, 0, 0, 0.85) !important;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.payment-account-box {
+    width: 100%;
+    max-width: 340px;
+
+    background: #050505 !important;
+
+    border: 1px solid #39ff14 !important;
+    border-radius: 12px;
+
+    padding: 22px;
+
+    box-sizing: border-box;
+
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.payment-account-box h2 {
+    color: #39ff14 !important;
+
+    font-family: "Courier New", monospace !important;
+
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.payment-account-box p {
+    color: #ffffff !important;
+
+    font-family: "Courier New", monospace !important;
+
+    margin-bottom: 18px;
+}
+
+.payment-account-box label {
+    display: block;
+
+    color: #00e5ff !important;
+
+    font-family: "Courier New", monospace !important;
+
+    margin-bottom: 8px;
+}
+
+.payment-account-box select {
+    width: 100%;
+
+    background: #000000 !important;
+    color: #ffffff !important;
+
+    border: 1px solid #39ff14 !important;
+    border-radius: 7px;
+
+    padding: 11px;
+
+    font-family: "Courier New", monospace !important;
+
+    margin-bottom: 16px;
+}
+
+.payment-account-box button {
+    width: 100%;
+
+    background: #050505 !important;
+    color: #39ff14 !important;
+
+    border: 1px solid #39ff14 !important;
+    border-radius: 7px;
+
+    padding: 11px;
+
+    margin-top: 8px;
+
+    font-family: "Courier New", monospace !important;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.payment-account-box button:hover {
+    background: #39ff14 !important;
+    color: #000000 !important;
+}
