@@ -1518,3 +1518,78 @@ body,
     background: #00e5ff !important;
     color: #000000 !important;
 }
+/* =================================
+   WISHLIST — PRODUCT BOXES
+   ================================= */
+
+#wishlistList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.wishlist-card {
+    position: relative;
+
+    background: #050505 !important;
+    border: 1px solid #39ff14 !important;
+    border-radius: 12px !important;
+
+    padding: 18px !important;
+    margin: 0 !important;
+
+    min-height: 150px;
+
+    box-sizing: border-box;
+
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+/* Product name */
+
+.wishlist-card h3 {
+    color: #39ff14 !important;
+
+    font-family: "Courier New", monospace !important;
+    font-size: 20px !important;
+
+    margin: 0 45px 8px 0 !important;
+}
+
+/* Price */
+
+.wishlist-card p {
+    color: #ffffff !important;
+
+    font-family: "Courier New", monospace !important;
+    font-size: 17px !important;
+
+    margin: 0 0 10px !important;
+}
+
+/* Product link */
+
+.wishlist-card a {
+    color: #00e5ff !important;
+
+    font-family: "Courier New", monospace !important;
+    font-size: 14px !important;
+}
+
+/* Purchased button */
+
+.wishlist-card .purchased-wishlist {
+    display: block;
+
+    margin-top: 14px !important;
+}
+
+/* Delete button */
+
+.wishlist-card .delete-wishlist {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+}
