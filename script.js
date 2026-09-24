@@ -1915,16 +1915,173 @@ const saveOwed = document.getElementById("saveOwed");
 
 saveOwed.addEventListener("click", function () {
 
-    const person = document.getElementById("owedPerson").value.trim();
-    const amount = Number(document.getElementById("owedAmount").value);
-    const type = document.getElementById("owedType").value;
-    const reason = document.getElementById("owedReason").value.trim();
-    const date = document.getElementById("owedDate").value;
+    const person =
+        document.getElementById("owedPerson").value.trim();
+
+    const amount =
+        Number(document.getElementById("owedAmount").value);
+
+    const type =
+        document.getElementById("owedType").value;
+
+    const reason =
+        document.getElementById("owedReason").value.trim();
+
+    const date =
+        document.getElementById("owedDate").value;
 
     if (!person || !amount || amount <= 0 || !date) {
         alert("Please enter person, amount and date");
         return;
     }
+
+    /*
+     * I HAVE TO RECEIVE
+     * = I am lending money
+     * = deduct money immediately
+     */
+
+    if (type === "receive") {
+
+        const overlay = document.createElement("div");
+
+        overlay.className = "payment-account-popup";
+
+        overlay.innerHTML = `
+            <div class="payment-account-box">
+
+                <h2>💸 Money Lent</h2>
+
+                <p>
+                    Amount:
+                    <strong>
+                        ₹${amount.toLocaleString("en-IN")}
+                    </strong>
+                </p>
+
+                <label>Deduct from</label>
+
+                <select id="lendAccountSelect">
+                    <option value="acc1">ACC-1</option>
+                    <option value="acc2">ACC-2</option>
+                    <option value="cash">Cash</option>
+                </select>
+
+                <button id="confirmLendButton">
+                    ✓ Confirm Lending
+                </button>
+
+                <button id="cancelLendButton">
+                    Cancel
+                </button>
+
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        const confirmLendButton =
+            overlay.querySelector("#confirmLendButton");
+
+        const cancelLendButton =
+            overlay.querySelector("#cancelLendButton");
+
+        confirmLendButton.addEventListener("click", function () {
+
+            const account =
+                overlay.querySelector("#lendAccountSelect").value;
+
+            if (amount > accounts[account]) {
+                alert("Insufficient balance in this account.");
+                return;
+            }
+
+            // Deduct the money immediately
+            accounts[account] -= amount;
+
+            saveAccounts();
+
+            // Record lending as an expense
+            let transactions =
+                JSON.parse(
+                    localStorage.getItem("financeTransactions")
+                ) || [];
+
+            const loanTransaction = {
+                id: Date.now(),
+                type: "expense",
+                amount: amount,
+                category: "Money Owed",
+                account: account,
+                date: date,
+                note: "Lent to " + person
+            };
+
+            transactions.push(loanTransaction);
+
+            localStorage.setItem(
+                "financeTransactions",
+                JSON.stringify(transactions)
+            );
+
+            const owedEntry = {
+                id: Date.now() + 1,
+                person: person,
+                amount: amount,
+                type: type,
+                reason: reason,
+                date: date,
+                paid: false,
+
+                loanAccount: account,
+                loanTransactionId: loanTransaction.id,
+                settlementTransactionId: null
+            };
+
+            let owedEntries =
+                JSON.parse(
+                    localStorage.getItem("financeOwed")
+                ) || [];
+
+            owedEntries.push(owedEntry);
+
+            localStorage.setItem(
+                "financeOwed",
+                JSON.stringify(owedEntries)
+            );
+
+            overlay.remove();
+
+            displayOwedEntries();
+            updateOwedTotals();
+
+            updateTotalBalance();
+            updateTotalExpense();
+            displayRecentTransactions();
+
+            alert("Money lent and deducted successfully.");
+
+            owedForm.style.display = "none";
+            addOwedButton.style.display = "block";
+
+            document.getElementById("owedPerson").value = "";
+            document.getElementById("owedAmount").value = "";
+            document.getElementById("owedReason").value = "";
+            document.getElementById("owedDate").value = "";
+        });
+
+        cancelLendButton.addEventListener("click", function () {
+            overlay.remove();
+        });
+
+        return;
+    }
+
+    /*
+     * I HAVE TO GIVE
+     * = I owe someone
+     * = don't deduct anything yet
+     */
 
     const owedEntry = {
         id: Date.now(),
@@ -1933,11 +2090,17 @@ saveOwed.addEventListener("click", function () {
         type: type,
         reason: reason,
         date: date,
-        paid: false
+        paid: false,
+
+        loanAccount: null,
+        loanTransactionId: null,
+        settlementTransactionId: null
     };
 
     let owedEntries =
-        JSON.parse(localStorage.getItem("financeOwed")) || [];
+        JSON.parse(
+            localStorage.getItem("financeOwed")
+        ) || [];
 
     owedEntries.push(owedEntry);
 
@@ -1945,7 +2108,7 @@ saveOwed.addEventListener("click", function () {
         "financeOwed",
         JSON.stringify(owedEntries)
     );
-    // Update the page immediately
+
     displayOwedEntries();
     updateOwedTotals();
 
@@ -1959,23 +2122,41 @@ saveOwed.addEventListener("click", function () {
     document.getElementById("owedReason").value = "";
     document.getElementById("owedDate").value = "";
 });
+function selectedEntryHasLoanTransaction(entry) {
+
+    return (
+        entry.type === "receive" &&
+        entry.loanTransactionId
+    );
+}
 function displayOwedEntries() {
 
-    const owedList = document.getElementById("owedList");
+    const owedList =
+        document.getElementById("owedList");
 
     let owedEntries =
-        JSON.parse(localStorage.getItem("financeOwed")) || [];
+        JSON.parse(
+            localStorage.getItem("financeOwed")
+        ) || [];
 
     owedList.innerHTML = "";
 
     if (owedEntries.length === 0) {
-        owedList.innerHTML = "<p>No money owed</p>";
+
+        owedList.innerHTML =
+            "<p>No money owed</p>";
+
         return;
     }
 
-    owedEntries.reverse().forEach(function (entry) {
+    owedEntries
+        .slice()
+        .reverse()
+        .forEach(function (entry) {
 
-        const item = document.createElement("div");
+        const item =
+            document.createElement("div");
+
         item.className = "recent-item";
 
         const direction =
@@ -1985,180 +2166,657 @@ function displayOwedEntries() {
 
         item.innerHTML = `
             <div>
-                <strong>${entry.person}</strong>
-                <p>${direction}</p>
-                ${entry.reason ? `<small>${entry.reason}</small>` : ""}
-                <small>${entry.date}</small>
+
+                <strong>
+                    ${entry.person}
+                </strong>
+
+                <p>
+                    ${direction}
+                </p>
+
+                ${
+                    entry.reason
+                    ? `<small>${entry.reason}</small>`
+                    : ""
+                }
+
+                <small>
+                    ${entry.date}
+                </small>
+
             </div>
 
             <div>
-                <strong>₹${entry.amount}</strong>
-                <button class="owed-paid-button" data-id="${entry.id}">
-                    ${entry.paid ? "✅ Paid" : "⏳ Unpaid"}
+
+                <strong>
+                    ₹${Number(entry.amount).toLocaleString("en-IN")}
+                </strong>
+
+                <button
+                    class="owed-paid-button"
+                    data-id="${entry.id}">
+                    ${
+                        entry.paid
+                            ? "✅ Paid"
+                            : "⏳ Unpaid"
+                    }
                 </button>
-                
-                <button class="edit-owed-button" data-id="${entry.id}">
+
+                <button
+                    class="edit-owed-button"
+                    data-id="${entry.id}">
                     ✏️ Edit
                 </button>
-                
-                <button class="delete-owed-button" data-id="${entry.id}">
+
+                <button
+                    class="delete-owed-button"
+                    data-id="${entry.id}">
                     🗑️
                 </button>
+
             </div>
         `;
 
         owedList.appendChild(item);
-        const paidButton = item.querySelector(".owed-paid-button");
 
-        paidButton.addEventListener("click", function () {
-        
-            let entries =
-                JSON.parse(localStorage.getItem("financeOwed")) || [];
-        
-            const selectedEntry = entries.find(function (e) {
-                return e.id === entry.id;
-            });
-        
-            if (!selectedEntry) {
-                return;
-            }
-        
-            // If already paid, do nothing for now
-            if (selectedEntry.paid) {
-                return;
-            }
-        
-            // Create payment popup
-            const overlay = document.createElement("div");
-            overlay.className = "payment-account-popup";
-        
-            const title =
-                selectedEntry.type === "receive"
-                    ? "💰 Payment Received"
-                    : "💸 Payment Made";
-        
-            const label =
-                selectedEntry.type === "receive"
-                    ? "Paid to"
-                    : "Paid from";
-        
-            overlay.innerHTML = `
-                <div class="payment-account-box">
-        
-                    <h2>${title}</h2>
-        
-                    <p>
-                        Amount:
-                        <strong>₹${Number(selectedEntry.amount).toLocaleString("en-IN")}</strong>
-                    </p>
-        
-                    <label>${label}</label>
-        
-                    <select id="paymentAccountSelect">
-                        <option value="acc1">ACC-1</option>
-                        <option value="acc2">ACC-2</option>
-                        <option value="cash">Cash</option>
-                    </select>
-        
-                    <button id="confirmPaymentButton">
-                        ✓ Confirm Payment
-                    </button>
-        
-                    <button id="cancelPaymentButton">
-                        Cancel
-                    </button>
-        
-                </div>
-            `;
-        
-            document.body.appendChild(overlay);
-        
-            const confirmPaymentButton =
-                overlay.querySelector("#confirmPaymentButton");
-        
-            const cancelPaymentButton =
-                overlay.querySelector("#cancelPaymentButton");
-        
-            confirmPaymentButton.addEventListener("click", function () {
-        
-                const account =
-                    overlay.querySelector("#paymentAccountSelect").value;
-        
-                const amount = Number(selectedEntry.amount);
-        
-                // Money received → add to account
-                if (selectedEntry.type === "receive") {
-        
-                    accounts[account] += amount;
-        
+
+        // =================================
+        // EDIT
+        // =================================
+
+        const editButton =
+            item.querySelector(".edit-owed-button");
+
+        editButton.addEventListener(
+            "click",
+            function () {
+
+                let entries =
+                    JSON.parse(
+                        localStorage.getItem("financeOwed")
+                    ) || [];
+
+                const selectedEntry =
+                    entries.find(function (e) {
+                        return e.id === entry.id;
+                    });
+
+                if (!selectedEntry) {
+                    return;
                 }
-        
-                // Money given → remove from account
-                else {
-        
-                    if (amount > accounts[account]) {
-                        alert("Insufficient balance in this account.");
-                        return;
-                    }
-        
-                    accounts[account] -= amount;
+
+                const newAmount =
+                    prompt(
+                        "Enter the remaining amount:",
+                        selectedEntry.amount
+                    );
+
+                if (newAmount === null) {
+                    return;
                 }
-        
-                saveAccounts();
-        
-                // Record payment as a transaction
-                let transactions =
-                    JSON.parse(localStorage.getItem("financeTransactions")) || [];
-        
-                const paymentTransaction = {
-                    id: Date.now(),
-                    type:
-                        selectedEntry.type === "receive"
-                            ? "income"
-                            : "expense",
-                    amount: amount,
-                    source:
-                        selectedEntry.type === "receive"
-                            ? "Money Owed"
-                            : undefined,
-                    category:
-                        selectedEntry.type === "give"
-                            ? "Money Owed"
-                            : undefined,
-                    account: account,
-                    date: new Date().toISOString().split("T")[0],
-                    note: selectedEntry.person
-                };
-        
-                transactions.push(paymentTransaction);
-        
-                localStorage.setItem(
-                    "financeTransactions",
-                    JSON.stringify(transactions)
-                );
-        
-                selectedEntry.paid = true;
-                selectedEntry.paidAccount = account;
-        
+
+                const amount =
+                    Number(newAmount);
+
+                if (!amount || amount <= 0) {
+                    alert("Please enter a valid amount");
+                    return;
+                }
+
+                selectedEntry.amount = amount;
+
                 localStorage.setItem(
                     "financeOwed",
                     JSON.stringify(entries)
                 );
-        
-                overlay.remove();
-        
+
                 displayOwedEntries();
                 updateOwedTotals();
+            }
+        );
+
+
+        // =================================
+        // PAID / UNPAID
+        // =================================
+
+        const paidButton =
+            item.querySelector(".owed-paid-button");
+
+        paidButton.addEventListener(
+            "click",
+            function () {
+
+                let entries =
+                    JSON.parse(
+                        localStorage.getItem("financeOwed")
+                    ) || [];
+
+                const selectedEntry =
+                    entries.find(function (e) {
+                        return e.id === entry.id;
+                    });
+
+                if (!selectedEntry) {
+                    return;
+                }
+
+
+                // =============================
+                // CHANGE PAID → UNPAID
+                // =============================
+
+                if (selectedEntry.paid) {
+
+                    let transactions =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "financeTransactions"
+                            )
+                        ) || [];
+
+
+                    /*
+                     * Reverse the settlement
+                     */
+
+                    if (
+                        selectedEntry.settlementTransactionId
+                    ) {
+
+                        const settlement =
+                            transactions.find(
+                                function (t) {
+                                    return (
+                                        t.id ===
+                                        selectedEntry
+                                            .settlementTransactionId
+                                    );
+                                }
+                            );
+
+                        if (settlement) {
+
+                            if (
+                                settlement.type ===
+                                "income"
+                            ) {
+
+                                accounts[
+                                    settlement.account
+                                ] -= Number(
+                                    settlement.amount
+                                );
+
+                            }
+
+                            else if (
+                                settlement.type ===
+                                "expense"
+                            ) {
+
+                                accounts[
+                                    settlement.account
+                                ] += Number(
+                                    settlement.amount
+                                );
+                            }
+
+                            transactions =
+                                transactions.filter(
+                                    function (t) {
+                                        return (
+                                            t.id !==
+                                            selectedEntry
+                                                .settlementTransactionId
+                                        );
+                                    }
+                                );
+                        }
+
+                    }
+
+                    saveAccounts();
+
+                    selectedEntry.paid = false;
+
+                    selectedEntry.settlementTransactionId =
+                        null;
+
+                    localStorage.setItem(
+                        "financeOwed",
+                        JSON.stringify(entries)
+                    );
+
+                    localStorage.setItem(
+                        "financeTransactions",
+                        JSON.stringify(transactions)
+                    );
+
+                    displayOwedEntries();
+                    updateOwedTotals();
+
+                    updateTotalBalance();
+                    updateTotalIncome();
+                    updateTotalExpense();
+                    displayRecentTransactions();
+
+                    return;
+                }
+
+
+                // =============================
+                // CHANGE UNPAID → PAID
+                // =============================
+
+                const overlay =
+                    document.createElement("div");
+
+                overlay.className =
+                    "payment-account-popup";
+
+                const title =
+                    selectedEntry.type === "receive"
+                        ? "💰 Payment Received"
+                        : "💸 Payment Made";
+
+                const label =
+                    selectedEntry.type === "receive"
+                        ? "Paid to"
+                        : "Paid from";
+
+                overlay.innerHTML = `
+                    <div class="payment-account-box">
+
+                        <h2>${title}</h2>
+
+                        <p>
+                            Amount:
+                            <strong>
+                                ₹${Number(
+                                    selectedEntry.amount
+                                ).toLocaleString("en-IN")}
+                            </strong>
+                        </p>
+
+                        <label>${label}</label>
+
+                        <select id="paymentAccountSelect">
+
+                            <option value="acc1">
+                                ACC-1
+                            </option>
+
+                            <option value="acc2">
+                                ACC-2
+                            </option>
+
+                            <option value="cash">
+                                Cash
+                            </option>
+
+                        </select>
+
+                        <button id="confirmPaymentButton">
+                            ✓ Confirm Payment
+                        </button>
+
+                        <button id="cancelPaymentButton">
+                            Cancel
+                        </button>
+
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                const confirmPaymentButton =
+                    overlay.querySelector(
+                        "#confirmPaymentButton"
+                    );
+
+                const cancelPaymentButton =
+                    overlay.querySelector(
+                        "#cancelPaymentButton"
+                    );
+
+
+                confirmPaymentButton.addEventListener(
+                    "click",
+                    function () {
+
+                        const account =
+                            overlay.querySelector(
+                                "#paymentAccountSelect"
+                            ).value;
+
+                        const amount =
+                            Number(
+                                selectedEntry.amount
+                            );
+
+
+                        /*
+                         * I HAVE TO RECEIVE
+                         *
+                         * Money was already deducted
+                         * when it was lent.
+                         *
+                         * Now it comes back.
+                         */
+
+                        if (
+                            selectedEntry.type ===
+                            "receive"
+                        ) {
+
+                            accounts[account] +=
+                                amount;
+
+                        }
+
+
+                        /*
+                         * I HAVE TO GIVE
+                         *
+                         * Money leaves my account now.
+                         */
+
+                        else {
+
+                            if (
+                                amount >
+                                accounts[account]
+                            ) {
+
+                                alert(
+                                    "Insufficient balance in this account."
+                                );
+
+                                return;
+                            }
+
+                            accounts[account] -=
+                                amount;
+                        }
+
+
+                        saveAccounts();
+
+
+                        let transactions =
+                            JSON.parse(
+                                localStorage.getItem(
+                                    "financeTransactions"
+                                )
+                            ) || [];
+
+
+                        const paymentTransaction = {
+
+                            id: Date.now(),
+
+                            type:
+                                selectedEntry.type ===
+                                "receive"
+                                    ? "income"
+                                    : "expense",
+
+                            amount: amount,
+
+                            source:
+                                selectedEntry.type ===
+                                "receive"
+                                    ? "Money Owed"
+                                    : undefined,
+
+                            category:
+                                selectedEntry.type ===
+                                "give"
+                                    ? "Money Owed"
+                                    : undefined,
+
+                            account: account,
+
+                            date:
+                                new Date()
+                                    .toISOString()
+                                    .split("T")[0],
+
+                            note:
+                                selectedEntry.person
+                        };
+
+
+                        transactions.push(
+                            paymentTransaction
+                        );
+
+
+                        selectedEntry.paid = true;
+
+                        selectedEntry.settlementTransactionId =
+                            paymentTransaction.id;
+
+
+                        localStorage.setItem(
+                            "financeOwed",
+                            JSON.stringify(entries)
+                        );
+
+                        localStorage.setItem(
+                            "financeTransactions",
+                            JSON.stringify(
+                                transactions
+                            )
+                        );
+
+
+                        overlay.remove();
+
+                        displayOwedEntries();
+                        updateOwedTotals();
+
+                        updateTotalBalance();
+                        updateTotalIncome();
+                        updateTotalExpense();
+                        displayRecentTransactions();
+                    }
+                );
+
+
+                cancelPaymentButton.addEventListener(
+                    "click",
+                    function () {
+                        overlay.remove();
+                    }
+                );
+
+            }
+        );
+
+
+        // =================================
+        // DELETE
+        // =================================
+
+        const deleteButton =
+            item.querySelector(
+                ".delete-owed-button"
+            );
+
+        deleteButton.addEventListener(
+            "click",
+            function () {
+
+                const confirmed =
+                    confirm(
+                        "Delete this money owed entry?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                let entries =
+                    JSON.parse(
+                        localStorage.getItem("financeOwed")
+                    ) || [];
+
+                let transactions =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "financeTransactions"
+                        )
+                    ) || [];
+
+
+                /*
+                 * Reverse original lending
+                 * if this was money I lent.
+                 */
+
+                if (
+                    selectedEntryHasLoanTransaction(
+                        entry
+                    )
+                ) {
+
+                    const loanTransaction =
+                        transactions.find(
+                            function (t) {
+                                return (
+                                    t.id ===
+                                    entry.loanTransactionId
+                                );
+                            }
+                        );
+
+                    if (loanTransaction) {
+
+                        accounts[
+                            loanTransaction.account
+                        ] += Number(
+                            loanTransaction.amount
+                        );
+
+                        transactions =
+                            transactions.filter(
+                                function (t) {
+                                    return (
+                                        t.id !==
+                                        entry.loanTransactionId
+                                    );
+                                }
+                            );
+                    }
+                }
+
+
+                /*
+                 * Reverse settlement/payment
+                 */
+
+                if (
+                    entry.settlementTransactionId
+                ) {
+
+                    const settlement =
+                        transactions.find(
+                            function (t) {
+                                return (
+                                    t.id ===
+                                    entry.settlementTransactionId
+                                );
+                            }
+                        );
+
+                    if (settlement) {
+
+                        if (
+                            settlement.type ===
+                            "income"
+                        ) {
+
+                            accounts[
+                                settlement.account
+                            ] -= Number(
+                                settlement.amount
+                            );
+
+                        }
+
+                        else if (
+                            settlement.type ===
+                            "expense"
+                        ) {
+
+                            accounts[
+                                settlement.account
+                            ] += Number(
+                                settlement.amount
+                            );
+                        }
+
+                        transactions =
+                            transactions.filter(
+                                function (t) {
+                                    return (
+                                        t.id !==
+                                        entry.settlementTransactionId
+                                    );
+                                }
+                            );
+                    }
+                }
+
+
+                accounts.acc1 =
+                    Number(accounts.acc1) || 0;
+
+                accounts.acc2 =
+                    Number(accounts.acc2) || 0;
+
+                accounts.cash =
+                    Number(accounts.cash) || 0;
+
+
+                saveAccounts();
+
+
+                entries =
+                    entries.filter(
+                        function (e) {
+                            return e.id !== entry.id;
+                        }
+                    );
+
+
+                localStorage.setItem(
+                    "financeOwed",
+                    JSON.stringify(entries)
+                );
+
+                localStorage.setItem(
+                    "financeTransactions",
+                    JSON.stringify(
+                        transactions
+                    )
+                );
+
+
+                displayOwedEntries();
+                updateOwedTotals();
+
                 updateTotalBalance();
                 updateTotalIncome();
                 updateTotalExpense();
                 displayRecentTransactions();
-            });
-        
-            cancelPaymentButton.addEventListener("click", function () {
-                overlay.remove();
-            });
-        });
+
+            }
+        );
+
     });
 }
 function updateOwedTotals() {
