@@ -2222,60 +2222,56 @@ function displayOwedEntries() {
 
 
         // =================================
-        // EDIT
+        // EDIT MONEY OWED
         // =================================
-
+        
         const editButton =
             item.querySelector(".edit-owed-button");
-
-        editButton.addEventListener(
-            "click",
-            function () {
-
-                let entries =
-                    JSON.parse(
-                        localStorage.getItem("financeOwed")
-                    ) || [];
-
-                const selectedEntry =
-                    entries.find(function (e) {
-                        return e.id === entry.id;
-                    });
-
-                if (!selectedEntry) {
-                    return;
-                }
-
-                const newAmount =
-                    prompt(
-                        "Enter the remaining amount:",
-                        selectedEntry.amount
-                    );
-
-                if (newAmount === null) {
-                    return;
-                }
-
-                const amount =
-                    Number(newAmount);
-
-                if (!amount || amount <= 0) {
-                    alert("Please enter a valid amount");
-                    return;
-                }
-
-                selectedEntry.amount = amount;
-
-                localStorage.setItem(
-                    "financeOwed",
-                    JSON.stringify(entries)
-                );
-
-                displayOwedEntries();
-                updateOwedTotals();
+        
+        editButton.addEventListener("click", function () {
+        
+            let entries =
+                JSON.parse(
+                    localStorage.getItem("financeOwed")
+                ) || [];
+        
+            const selectedEntry =
+                entries.find(function (e) {
+                    return e.id === entry.id;
+                });
+        
+            if (!selectedEntry) {
+                return;
             }
-        );
-
+        
+            // Edit remaining amount
+            const newAmount =
+                prompt(
+                    "Enter the remaining amount:",
+                    selectedEntry.amount
+                );
+        
+            if (newAmount === null) {
+                return;
+            }
+        
+            const amount = Number(newAmount);
+        
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount");
+                return;
+            }
+        
+            selectedEntry.amount = amount;
+        
+            localStorage.setItem(
+                "financeOwed",
+                JSON.stringify(entries)
+            );
+        
+            displayOwedEntries();
+            updateOwedTotals();
+        });
 
         // =================================
         // PAID / UNPAID
