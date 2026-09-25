@@ -2955,6 +2955,8 @@ function displayOwedEntries() {
             updateTotalExpense();
             displayRecentTransactions();
         });
+        }
+        
 function updateOwedTotals() {
 
     const moneyGiveTotal =
