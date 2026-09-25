@@ -2789,188 +2789,172 @@ function displayOwedEntries() {
         );
 
 
-        // =================================
-        // DELETE
-        // =================================
-
-        const deleteButton =
-            item.querySelector(
-                ".delete-owed-button"
-            );
-
-        deleteButton.addEventListener(
-            "click",
-            function () {
-
-                const confirmed =
-                    confirm(
-                        "Delete this money owed entry?"
-                    );
-
-                if (!confirmed) {
-                    return;
-                }
-
-                let entries =
-                    JSON.parse(
-                        localStorage.getItem("financeOwed")
-                    ) || [];
-
-                let transactions =
-                    JSON.parse(
-                        localStorage.getItem(
-                            "financeTransactions"
-                        )
-                    ) || [];
-
-
-                /*
-                 * Reverse original lending
-                 * if this was money I lent.
-                 */
-
-                if (
-                    selectedEntryHasLoanTransaction(
-                        entry
-                    )
-                ) {
-
-                    const loanTransaction =
-                        transactions.find(
-                            function (t) {
-                                return (
-                                    t.id ===
-                                    entry.loanTransactionId
-                                );
-                            }
-                        );
-
-                    if (loanTransaction) {
-
-                        accounts[
-                            loanTransaction.account
-                        ] += Number(
-                            loanTransaction.amount
-                        );
-
-                        transactions =
-                            transactions.filter(
-                                function (t) {
-                                    return (
-                                        t.id !==
-                                        entry.loanTransactionId
-                                    );
-                                }
-                            );
-                    }
-                }
-
-
-                /*
-                 * Reverse settlement/payment
-                 */
-
-                if (
-                    entry.settlementTransactionId
-                ) {
-
-                    const settlement =
-                        transactions.find(
-                            function (t) {
-                                return (
-                                    t.id ===
-                                    entry.settlementTransactionId
-                                );
-                            }
-                        );
-
-                    if (settlement) {
-
-                        if (
-                            settlement.type ===
-                            "income"
-                        ) {
-
-                            accounts[
-                                settlement.account
-                            ] -= Number(
-                                settlement.amount
-                            );
-
-                        }
-
-                        else if (
-                            settlement.type ===
-                            "expense"
-                        ) {
-
-                            accounts[
-                                settlement.account
-                            ] += Number(
-                                settlement.amount
-                            );
-                        }
-
-                        transactions =
-                            transactions.filter(
-                                function (t) {
-                                    return (
-                                        t.id !==
-                                        entry.settlementTransactionId
-                                    );
-                                }
-                            );
-                    }
-                }
-
-
-                accounts.acc1 =
-                    Number(accounts.acc1) || 0;
-
-                accounts.acc2 =
-                    Number(accounts.acc2) || 0;
-
-                accounts.cash =
-                    Number(accounts.cash) || 0;
-
-
-                saveAccounts();
-
-
-                entries =
-                    entries.filter(
-                        function (e) {
-                            return e.id !== entry.id;
-                        }
-                    );
-
-
-                localStorage.setItem(
-                    "financeOwed",
-                    JSON.stringify(entries)
-                );
-
-                localStorage.setItem(
-                    "financeTransactions",
-                    JSON.stringify(
-                        transactions
-                    )
-                );
-
-
-                displayOwedEntries();
-                updateOwedTotals();
-
-                updateTotalBalance();
-                updateTotalIncome();
-                updateTotalExpense();
-                displayRecentTransactions();
-
+        const deleteOwedButton =
+            item.querySelector(".delete-owed-button");
+        
+        deleteOwedButton.addEventListener("click", function () {
+        
+            const confirmed =
+                confirm("Delete this money owed entry?");
+        
+            if (!confirmed) {
+                return;
             }
-        );
-
-    });
-}
+        
+            let entries =
+                JSON.parse(localStorage.getItem("financeOwed")) || [];
+        
+            let transactions =
+                JSON.parse(
+                    localStorage.getItem("financeTransactions")
+                ) || [];
+        
+            let accounts =
+                JSON.parse(
+                    localStorage.getItem("financeAccounts")
+                ) || {
+                    acc1: 0,
+                    acc2: 0,
+                    cash: 0
+                };
+        
+            const selectedEntry =
+                entries.find(function (e) {
+                    return e.id === entry.id;
+                });
+        
+            if (!selectedEntry) {
+                return;
+            }
+        
+            /*
+             * =================================
+             * REVERSE ORIGINAL LOAN
+             * =================================
+             *
+             * I Have To Receive:
+             * The original loan was deducted from
+             * the account, so deleting it returns
+             * the CURRENT remaining amount.
+             */
+        
+            if (
+                selectedEntry.type === "receive" &&
+                selectedEntry.loanAccount
+            ) {
+        
+                const account =
+                    selectedEntry.loanAccount;
+        
+                const currentAmount =
+                    Number(selectedEntry.amount);
+        
+                accounts[account] += currentAmount;
+        
+                if (selectedEntry.loanTransactionId) {
+        
+                    transactions =
+                        transactions.filter(function (t) {
+                            return (
+                                t.id !==
+                                selectedEntry.loanTransactionId
+                            );
+                        });
+                }
+            }
+        
+            /*
+             * =================================
+             * REVERSE SETTLEMENT PAYMENT
+             * =================================
+             */
+        
+            if (
+                selectedEntry.paid &&
+                selectedEntry.paidAccount &&
+                selectedEntry.settlementTransactionId
+            ) {
+        
+                const account =
+                    selectedEntry.paidAccount;
+        
+                const settlementTransaction =
+                    transactions.find(function (t) {
+                        return (
+                            t.id ===
+                            selectedEntry.settlementTransactionId
+                        );
+                    });
+        
+                if (settlementTransaction) {
+        
+                    const amount =
+                        Number(settlementTransaction.amount);
+        
+                    if (
+                        settlementTransaction.type === "income"
+                    ) {
+                        // Remove repayment received
+                        accounts[account] -= amount;
+                    }
+        
+                    else if (
+                        settlementTransaction.type === "expense"
+                    ) {
+                        // Return money that was paid
+                        accounts[account] += amount;
+                    }
+                }
+        
+                transactions =
+                    transactions.filter(function (t) {
+                        return (
+                            t.id !==
+                            selectedEntry.settlementTransactionId
+                        );
+                    });
+            }
+        
+            /*
+             * =================================
+             * SAVE EVERYTHING
+             * =================================
+             */
+        
+            localStorage.setItem(
+                "financeAccounts",
+                JSON.stringify(accounts)
+            );
+        
+            localStorage.setItem(
+                "financeTransactions",
+                JSON.stringify(transactions)
+            );
+        
+            entries =
+                entries.filter(function (e) {
+                    return e.id !== entry.id;
+                });
+        
+            localStorage.setItem(
+                "financeOwed",
+                JSON.stringify(entries)
+            );
+        
+            /*
+             * =================================
+             * REFRESH PAGE DATA
+             * =================================
+             */
+        
+            displayOwedEntries();
+            updateOwedTotals();
+        
+            updateTotalBalance();
+            updateTotalIncome();
+            updateTotalExpense();
+            displayRecentTransactions();
+        });
 function updateOwedTotals() {
 
     const moneyGiveTotal =
