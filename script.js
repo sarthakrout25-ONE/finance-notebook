@@ -2960,8 +2960,6 @@ function displayOwedEntries() {
     }
 
 function updateOwedTotals() {
-        
-function updateOwedTotals() {
 
     const moneyGiveTotal =
         document.getElementById("moneyGiveTotal");
