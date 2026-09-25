@@ -289,7 +289,11 @@ function updateTotalBalance() {
 
         const totalExpense =
             transactions
-                .filter(transaction => transaction.type === "expense")
+                .filter(
+                    transaction =>
+                        transaction.type === "expense" &&
+                        isCurrentMonth(transaction.date)
+                )
                 .reduce(
                     (total, transaction) =>
                         total + Number(transaction.amount),
@@ -320,8 +324,8 @@ function updateTotalBalance() {
         };
 
         transactions.forEach(function (transaction) {
-
             if (transaction.type !== "expense") return;
+            if (!isCurrentMonth(transaction.date)) return;
 
             const category = transaction.category;
 
@@ -393,6 +397,34 @@ function updateTotalBalance() {
             categoryChart.appendChild(row);
         });
     }
+// ===============================
+// CURRENT MONTH CHECK
+// ===============================
+
+function isCurrentMonth(transactionDate) {
+
+    if (!transactionDate) {
+        return false;
+    }
+
+    const now = new Date();
+
+    const currentYear = now.getFullYear();
+    const currentMonth =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+    const dateParts =
+        transactionDate.split("-");
+
+    if (dateParts.length !== 3) {
+        return false;
+    }
+
+    return (
+        Number(dateParts[0]) === currentYear &&
+        dateParts[1] === currentMonth
+    );
+}
 // Initial display
 
 updateTotalBalance();
@@ -794,7 +826,11 @@ function updateTotalIncome() {
 
     const totalIncome =
         transactions
-            .filter(transaction => transaction.type === "income")
+            .filter(
+                transaction =>
+                    transaction.type === "income" &&
+                    isCurrentMonth(transaction.date)
+            )
             .reduce(
                 (total, transaction) =>
                     total + Number(transaction.amount),
@@ -1404,38 +1440,49 @@ const wishlistLink =
 // ===============================
 // Statistics
 // ===============================
-
 function updateStatisticsOverview() {
 
     const transactions =
-        JSON.parse(localStorage.getItem("financeTransactions")) || [];
+        JSON.parse(
+            localStorage.getItem("financeTransactions")
+        ) || [];
 
-    let totalIncome = 0;
-    let totalExpense = 0;
+    const currentMonthTransactions =
+        transactions.filter(function (transaction) {
+            return isCurrentMonth(transaction.date);
+        });
 
-    transactions.forEach(function (transaction) {
+    const totalIncome =
+        currentMonthTransactions
+            .filter(function (transaction) {
+                return transaction.type === "income";
+            })
+            .reduce(function (total, transaction) {
+                return total + Number(transaction.amount);
+            }, 0);
 
-        if (transaction.type === "income") {
-            totalIncome += Number(transaction.amount);
-        }
+    const totalExpense =
+        currentMonthTransactions
+            .filter(function (transaction) {
+                return transaction.type === "expense";
+            })
+            .reduce(function (total, transaction) {
+                return total + Number(transaction.amount);
+            }, 0);
 
-        if (transaction.type === "expense") {
-            totalExpense += Number(transaction.amount);
-        }
+    const moneyFlow =
+        totalIncome - totalExpense;
 
-    });
+    document.getElementById("statisticsIncome").textContent =
+        "₹" + totalIncome.toLocaleString("en-IN");
 
-    const moneyFlow = totalIncome - totalExpense;
+    document.getElementById("statisticsExpense").textContent =
+        "₹" + totalExpense.toLocaleString("en-IN");
 
-    document.getElementById("statsIncome").textContent =
-        "₹" + totalIncome.toFixed(2);
-
-    document.getElementById("statsExpense").textContent =
-        "₹" + totalExpense.toFixed(2);
-
-    document.getElementById("statsFlow").textContent =
-        "₹" + moneyFlow.toFixed(2);
+    document.getElementById("statisticsFlow").textContent =
+        "₹" + moneyFlow.toLocaleString("en-IN");
 }
+
 // ===============================
 // Statistics - Category Spending
 // ===============================
@@ -1462,8 +1509,8 @@ function updateStatisticsCategories() {
     });
 
     transactions.forEach(function (transaction) {
-
         if (transaction.type !== "expense") return;
+        if (!isCurrentMonth(transaction.date)) return;
 
         const category =
             categories.hasOwnProperty(transaction.category)
@@ -1808,8 +1855,8 @@ function updateStatisticsAccounts() {
     };
 
     transactions.forEach(function (transaction) {
-
         if (transaction.type !== "expense") return;
+        if (!isCurrentMonth(transaction.date)) return;
 
         const account = transaction.account;
 
