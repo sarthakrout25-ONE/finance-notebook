@@ -995,7 +995,7 @@ homeButton.addEventListener("click", function () {
     displayRecentTransactions();
     updateOwedTotals();
     displayOwedEntries();
-    displayWishlist();
+    displayWishlistItems();
 
     window.scrollTo(0, 0);
 });
