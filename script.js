@@ -3089,8 +3089,18 @@ saveWishlistButton.addEventListener("click", function () {
     const price =
         parseFloat(document.getElementById("wishlistPrice").value);
 
-    const link =
+    const rawLink =
         wishlistLink.value.trim();
+    
+    const link =
+        rawLink
+            ? (
+                rawLink.startsWith("http://") ||
+                rawLink.startsWith("https://")
+                    ? rawLink
+                    : "https://" + rawLink
+              )
+            : "";
 
     if (!name || isNaN(price)) {
         alert("Please enter product name and price.");
