@@ -681,7 +681,9 @@ saveExpense.addEventListener("click", function () {
     // Update total expense
 
     updateTotalExpense();
-
+    updateCategories();
+    updateMonthlyOverview();
+    
     displayRecentTransactions();
 
     // Close form
