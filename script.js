@@ -2954,8 +2954,9 @@ function displayOwedEntries() {
             updateTotalIncome();
             updateTotalExpense();
             displayRecentTransactions();
-                    });
-                }
+        });
+        });
+}
         
 function updateOwedTotals() {
 
