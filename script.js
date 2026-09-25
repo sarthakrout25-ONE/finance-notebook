@@ -2270,50 +2270,147 @@ function displayOwedEntries() {
         
         
             // =================================
-            // I HAVE TO RECEIVE
-            // Money was already lent
+            // EDIT ACCOUNTING
             // =================================
-        
+            
+            // If the entry is UNPAID
+            // only the original loan needs adjustment.
+            
             if (
+                !selectedEntry.paid &&
                 selectedEntry.type === "receive" &&
                 selectedEntry.loanAccount
             ) {
-        
+            
                 const account =
                     selectedEntry.loanAccount;
-        
-                /*
-                 * New amount is higher
-                 * → deduct the difference
-                 */
-        
+            
                 if (difference > 0) {
-        
+            
                     if (difference > accounts[account]) {
-        
+            
                         alert(
                             "Insufficient balance in this account."
                         );
-        
+            
                         return;
                     }
-        
+            
                     accounts[account] -= difference;
-                }
-        
-        
-                /*
-                 * New amount is lower
-                 * → return the difference
-                 */
-        
-                else if (difference < 0) {
-        
+            
+                } else if (difference < 0) {
+            
                     accounts[account] +=
                         Math.abs(difference);
                 }
-        
-                saveAccounts();
+            }
+            
+            
+            // =================================
+            // IF ALREADY PAID
+            // =================================
+            
+            // Only adjust the settlement account.
+            // The original loan must NOT be changed.
+            
+            if (
+                selectedEntry.paid &&
+                selectedEntry.paidAccount
+            ) {
+            
+                const account =
+                    selectedEntry.paidAccount;
+            
+                if (
+                    selectedEntry.type === "receive"
+                ) {
+            
+                    if (difference > 0) {
+            
+                        accounts[account] += difference;
+            
+                    } else if (difference < 0) {
+            
+                        const removeAmount =
+                            Math.abs(difference);
+            
+                        if (
+                            removeAmount >
+                            accounts[account]
+                        ) {
+            
+                            alert(
+                                "Insufficient balance in this account."
+                            );
+            
+                            return;
+                        }
+            
+                        accounts[account] -=
+                            removeAmount;
+                    }
+            
+                } else {
+            
+                    if (difference > 0) {
+            
+                        if (
+                            difference >
+                            accounts[account]
+                        ) {
+            
+                            alert(
+                                "Insufficient balance in this account."
+                            );
+            
+                            return;
+                        }
+            
+                        accounts[account] -= difference;
+            
+                    } else if (difference < 0) {
+            
+                        accounts[account] +=
+                            Math.abs(difference);
+                    }
+                }
+            
+                // Update the linked settlement transaction
+                // so Paid → Unpaid later uses the new amount.
+            
+                if (selectedEntry.settlementTransactionId) {
+            
+                    let transactions =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "financeTransactions"
+                            )
+                        ) || [];
+            
+                    const settlementTransaction =
+                        transactions.find(function (t) {
+            
+                            return (
+                                t.id ===
+                                selectedEntry.settlementTransactionId
+                            );
+            
+                        });
+            
+                    if (settlementTransaction) {
+            
+                        settlementTransaction.amount =
+                            newAmount;
+            
+                        localStorage.setItem(
+                            "financeTransactions",
+                            JSON.stringify(transactions)
+                        );
+                    }
+                }
+            }
+            
+            saveAccounts();
             }
         
         
