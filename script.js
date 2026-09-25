@@ -2244,33 +2244,187 @@ function displayOwedEntries() {
                 return;
             }
         
-            // Edit remaining amount
-            const newAmount =
+            const oldAmount =
+                Number(selectedEntry.amount);
+        
+            const newAmountInput =
                 prompt(
-                    "Enter the remaining amount:",
-                    selectedEntry.amount
+                    "Enter the new remaining amount:",
+                    oldAmount
                 );
         
-            if (newAmount === null) {
+            if (newAmountInput === null) {
                 return;
             }
         
-            const amount = Number(newAmount);
+            const newAmount =
+                Number(newAmountInput);
         
-            if (!amount || amount <= 0) {
+            if (!newAmount || newAmount <= 0) {
                 alert("Please enter a valid amount");
                 return;
             }
         
-            selectedEntry.amount = amount;
+            const difference =
+                newAmount - oldAmount;
+        
+        
+            // =================================
+            // I HAVE TO RECEIVE
+            // Money was already lent
+            // =================================
+        
+            if (
+                selectedEntry.type === "receive" &&
+                selectedEntry.loanAccount
+            ) {
+        
+                const account =
+                    selectedEntry.loanAccount;
+        
+                /*
+                 * New amount is higher
+                 * → deduct the difference
+                 */
+        
+                if (difference > 0) {
+        
+                    if (difference > accounts[account]) {
+        
+                        alert(
+                            "Insufficient balance in this account."
+                        );
+        
+                        return;
+                    }
+        
+                    accounts[account] -= difference;
+                }
+        
+        
+                /*
+                 * New amount is lower
+                 * → return the difference
+                 */
+        
+                else if (difference < 0) {
+        
+                    accounts[account] +=
+                        Math.abs(difference);
+                }
+        
+                saveAccounts();
+            }
+        
+        
+            // =================================
+            // ALREADY PAID
+            // Adjust the account where payment
+            // was actually made/received
+            // =================================
+        
+            if (
+                selectedEntry.paid &&
+                selectedEntry.paidAccount
+            ) {
+        
+                const account =
+                    selectedEntry.paidAccount;
+        
+                /*
+                 * For received money:
+                 * changing amount higher means
+                 * more money should be received.
+                 */
+        
+                if (
+                    selectedEntry.type === "receive"
+                ) {
+        
+                    if (difference > 0) {
+        
+                        accounts[account] +=
+                            difference;
+        
+                    } else if (difference < 0) {
+        
+                        const removeAmount =
+                            Math.abs(difference);
+        
+                        if (
+                            removeAmount >
+                            accounts[account]
+                        ) {
+        
+                            alert(
+                                "Insufficient balance in this account."
+                            );
+        
+                            return;
+                        }
+        
+                        accounts[account] -=
+                            removeAmount;
+                    }
+                }
+        
+        
+                /*
+                 * For money given:
+                 * changing amount higher means
+                 * more money should leave the account.
+                 */
+        
+                else {
+        
+                    if (difference > 0) {
+        
+                        if (
+                            difference >
+                            accounts[account]
+                        ) {
+        
+                            alert(
+                                "Insufficient balance in this account."
+                            );
+        
+                            return;
+                        }
+        
+                        accounts[account] -=
+                            difference;
+        
+                    } else if (difference < 0) {
+        
+                        accounts[account] +=
+                            Math.abs(difference);
+                    }
+                }
+        
+                saveAccounts();
+            }
+        
+        
+            // Update amount
+        
+            selectedEntry.amount =
+                newAmount;
+        
         
             localStorage.setItem(
                 "financeOwed",
                 JSON.stringify(entries)
             );
         
+        
             displayOwedEntries();
             updateOwedTotals();
+        
+            updateTotalBalance();
+            updateTotalIncome();
+            updateTotalExpense();
+            displayRecentTransactions();
+        
         });
 
         // =================================
@@ -2591,6 +2745,8 @@ function displayOwedEntries() {
 
 
                         selectedEntry.paid = true;
+
+                        selectedEntry.paidAccount = account;
 
                         selectedEntry.settlementTransactionId =
                             paymentTransaction.id;
