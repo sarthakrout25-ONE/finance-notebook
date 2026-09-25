@@ -2956,7 +2956,7 @@ function displayOwedEntries() {
             displayRecentTransactions();
         });
 
-        });
+            });
     }
 
 function updateOwedTotals() {
