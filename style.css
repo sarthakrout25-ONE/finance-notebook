@@ -1872,3 +1872,102 @@ body,
 #statsMonthlyList {
     display: none !important;
 }
+/* =================================
+   COMPACT VERTICAL MONTHLY CHART
+   ================================= */
+
+#statsMonthlyChart {
+    width: 100% !important;
+    height: 210px !important;
+
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+
+    gap: 35px !important;
+
+    padding: 15px 20px 5px !important;
+    box-sizing: border-box !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+}
+
+#statsMonthlyChart .monthly-chart-item {
+    position: relative !important;
+
+    flex: 0 0 70px !important;
+    height: 190px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex-direction: column !important;
+}
+
+/* Bar */
+#statsMonthlyChart .chart-bar {
+    width: 42px !important;
+    height: 135px !important;
+
+    display: flex !important;
+    align-items: flex-end !important;
+
+    background: #151515 !important;
+
+    border-radius: 7px 7px 0 0 !important;
+    overflow: hidden !important;
+
+    order: 1 !important;
+}
+
+/* Filled part */
+#statsMonthlyChart .chart-fill {
+    width: 100% !important;
+
+    background: #ffd000 !important;
+
+    border-radius: 7px 7px 0 0 !important;
+}
+
+/* Month + amount container */
+#statsMonthlyChart .monthly-chart-label {
+    position: relative !important;
+
+    width: 100% !important;
+    height: 35px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+
+    order: 2 !important;
+}
+
+/* Month */
+#statsMonthlyChart .monthly-chart-label span {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+/* Amount above bar */
+#statsMonthlyChart .monthly-chart-label strong {
+    display: block !important;
+
+    position: absolute !important;
+
+    bottom: 48px !important;
+
+    white-space: nowrap !important;
+
+    font-size: 12px !important;
+
+    color: #ffd000 !important;
+}
+
+/* Hide duplicate list */
+#statsMonthlyList {
+    display: none !important;
+}
