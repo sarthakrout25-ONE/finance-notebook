@@ -3697,3 +3697,51 @@ startNotebook.addEventListener("click", function () {
     document.querySelector(".app").style.display = "block";
 
 });
+// =================================
+// CHANGE NOTEBOOK NAME
+// =================================
+
+const changeNameButton =
+    document.getElementById("changeNameButton");
+
+if (changeNameButton) {
+
+    changeNameButton.addEventListener("click", function () {
+
+        const currentName =
+            localStorage.getItem("financeUserName") || "";
+
+        const newName =
+            prompt("Enter your new name:", currentName);
+
+        if (newName === null) {
+            return;
+        }
+
+        const trimmedName =
+            newName.trim();
+
+        if (!trimmedName) {
+            alert("Please enter a name.");
+            return;
+        }
+
+        localStorage.setItem(
+            "financeUserName",
+            trimmedName
+        );
+
+        const personalTrackerTitle =
+            document.getElementById(
+                "personalTrackerTitle"
+            );
+
+        if (personalTrackerTitle) {
+            personalTrackerTitle.textContent =
+                trimmedName +
+                "'s personal money tracker";
+        }
+
+    });
+
+}
