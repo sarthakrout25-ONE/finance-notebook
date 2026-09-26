@@ -1724,3 +1724,74 @@ body,
     display: block !important;
     box-sizing: border-box !important;
 }
+/* =================================
+   STATISTICS — VERTICAL MONTHLY CHART
+   ================================= */
+
+#statsMonthlyChart {
+    width: 100% !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 18px !important;
+    min-height: 220px !important;
+    padding: 20px 10px 10px !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+}
+
+.monthly-chart-item {
+    flex: 0 0 70px !important;
+    width: 70px !important;
+    height: 190px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+
+    box-sizing: border-box !important;
+}
+
+.monthly-chart-label {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+
+    margin-bottom: 8px !important;
+    width: 100% !important;
+}
+
+.monthly-chart-label span {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+.monthly-chart-label strong {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+.monthly-chart-bar {
+    width: 42px !important;
+    height: 130px !important;
+
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+
+    background: #151515 !important;
+    border-radius: 6px 6px 0 0 !important;
+
+    overflow: hidden !important;
+}
+
+.monthly-chart-progress {
+    width: 100% !important;
+    height: 100% !important;
+
+    background: #ffd000 !important;
+    border-radius: 6px 6px 0 0 !important;
+
+    display: block !important;
+}
