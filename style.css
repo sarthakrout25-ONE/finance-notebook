@@ -1971,3 +1971,19 @@ body,
 #statsMonthlyList {
     display: none !important;
 }
+/* Fix monthly expense amount position */
+
+#statsMonthlyChart .monthly-chart-label strong {
+    position: absolute !important;
+
+    bottom: 155px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    display: block !important;
+
+    color: #ffd000 !important;
+    font-size: 12px !important;
+
+    white-space: nowrap !important;
+}
