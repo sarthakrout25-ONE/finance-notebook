@@ -389,7 +389,7 @@ function updateTotalBalance() {
                 <div class="chart-bar">
                     <div
                         class="chart-fill"
-                        style="width: ${percentage}%;">
+                        style="height: ${percentage}%;">
                     </div>
                 </div>
             `;
