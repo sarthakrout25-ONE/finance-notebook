@@ -3639,3 +3639,49 @@ viewHistoryButton.addEventListener("click", function () {
 
     window.scrollTo(0, 0);
 });
+// =================================
+// FIRST TIME SETUP
+// =================================
+
+const setupSection =
+    document.getElementById("setupSection");
+
+const setupName =
+    document.getElementById("setupName");
+
+const startNotebook =
+    document.getElementById("startNotebook");
+
+const savedUserName =
+    localStorage.getItem("financeUserName");
+
+if (savedUserName) {
+
+    setupSection.style.display = "none";
+
+} else {
+
+    document.querySelector(".app").style.display = "none";
+}
+
+
+startNotebook.addEventListener("click", function () {
+
+    const name =
+        setupName.value.trim();
+
+    if (!name) {
+        alert("Please enter your name.");
+        return;
+    }
+
+    localStorage.setItem(
+        "financeUserName",
+        name
+    );
+
+    setupSection.style.display = "none";
+
+    document.querySelector(".app").style.display = "block";
+
+});
