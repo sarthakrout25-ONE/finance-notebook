@@ -1801,38 +1801,54 @@ body,
 
 #statsMonthlyChart {
     width: 100% !important;
-    min-height: 240px !important;
+    min-height: 220px !important;
 
     display: flex !important;
     align-items: flex-end !important;
-    gap: 24px !important;
+    justify-content: flex-start !important;
 
-    padding: 20px 10px 10px !important;
+    gap: 28px !important;
+
+    padding: 20px 15px 10px !important;
     box-sizing: border-box !important;
 
     overflow-x: auto !important;
 }
 
 #statsMonthlyChart .monthly-chart-item {
-    flex: 0 0 70px !important;
+    flex: 0 0 80px !important;
 
-    height: 210px !important;
+    height: 190px !important;
 
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-end !important;
     align-items: center !important;
+    justify-content: flex-end !important;
 }
 
 #statsMonthlyChart .monthly-chart-label {
+    order: 2 !important;
+
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
 
-    margin-bottom: 8px !important;
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+}
+
+#statsMonthlyChart .monthly-chart-label span {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+#statsMonthlyChart .monthly-chart-label strong {
+    display: none !important;
 }
 
 #statsMonthlyChart .chart-bar {
+    order: 1 !important;
+
     width: 42px !important;
     height: 140px !important;
 
@@ -1851,4 +1867,8 @@ body,
     background: #ffd000 !important;
 
     border-radius: 6px 6px 0 0 !important;
+}
+/* Hide duplicate text list below monthly chart */
+#statsMonthlyList {
+    display: none !important;
 }
