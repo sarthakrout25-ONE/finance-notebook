@@ -1699,3 +1699,28 @@ body,
     background: #39ff14 !important;
     color: #000000 !important;
 }
+/* =================================
+   STATISTICS — MONTHLY EXPENSE CHART
+   ================================= */
+
+#statsMonthlyChart {
+    width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+.monthly-chart-item {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.monthly-chart-bar {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.monthly-chart-progress {
+    height: 10px !important;
+    display: block !important;
+    box-sizing: border-box !important;
+}
