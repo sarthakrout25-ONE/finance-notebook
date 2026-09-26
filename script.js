@@ -1475,13 +1475,13 @@ function updateStatisticsOverview() {
     const moneyFlow =
         totalIncome - totalExpense;
 
-    document.getElementById("statisticsIncome").textContent =
+    document.getElementById("statsIncome").textContent =
         "₹" + totalIncome.toLocaleString("en-IN");
-
-    document.getElementById("statisticsExpense").textContent =
+    
+    document.getElementById("statsExpense").textContent =
         "₹" + totalExpense.toLocaleString("en-IN");
-
-    document.getElementById("statisticsFlow").textContent =
+    
+    document.getElementById("statsFlow").textContent =
         "₹" + moneyFlow.toLocaleString("en-IN");
 }
 
