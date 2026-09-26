@@ -3655,6 +3655,16 @@ const startNotebook =
 const savedUserName =
     localStorage.getItem("financeUserName");
 
+const personalTrackerTitle =
+    document.getElementById("personalTrackerTitle");
+
+if (savedUserName) {
+
+    personalTrackerTitle.textContent =
+        savedUserName + "'s personal money tracker";
+
+}
+
 if (savedUserName) {
 
     setupSection.style.display = "none";
@@ -3679,6 +3689,8 @@ startNotebook.addEventListener("click", function () {
         "financeUserName",
         name
     );
+    personalTrackerTitle.textContent =
+    name + "'s personal money tracker";
 
     setupSection.style.display = "none";
 
