@@ -2005,3 +2005,91 @@ body,
 
     z-index: 10 !important;
 }
+/* =================================
+   FIRST TIME SETUP
+   ================================= */
+
+#setupSection {
+    min-height: 100vh;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.setup-box {
+    width: 100%;
+    max-width: 420px;
+
+    background: #050505;
+    border: 1px solid #39ff14;
+    border-radius: 12px;
+
+    padding: 30px 24px;
+    box-sizing: border-box;
+
+    text-align: center;
+}
+
+.setup-box h1 {
+    color: #39ff14;
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin: 0 0 25px;
+}
+
+.setup-box p {
+    color: #ffffff;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.setup-box label {
+    display: block;
+    color: #00e5ff;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+
+    text-align: left;
+    margin: 28px 0 8px;
+}
+
+.setup-box input {
+    width: 100%;
+    box-sizing: border-box;
+
+    background: #000;
+    color: #ffffff;
+
+    border: 1px solid #00e5ff;
+    border-radius: 6px;
+
+    padding: 13px;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+
+    outline: none;
+}
+
+.setup-box button {
+    width: 100%;
+
+    margin-top: 20px;
+    padding: 13px;
+
+    background: #39ff14;
+    color: #000;
+
+    border: none;
+    border-radius: 6px;
+
+    font-family: "Courier New", monospace;
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
