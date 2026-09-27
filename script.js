@@ -3745,3 +3745,89 @@ if (changeNameButton) {
     });
 
 }
+// =================================
+// ACCOUNTS & SOURCES
+// =================================
+
+const manageAccountsButton =
+    document.getElementById("manageAccountsButton");
+
+const accountsManagerSection =
+    document.getElementById("accountsManagerSection");
+
+const accountsManagerList =
+    document.getElementById("accountsManagerList");
+
+
+if (manageAccountsButton) {
+
+    manageAccountsButton.addEventListener("click", function () {
+
+        hideAllSections();
+
+        accountsManagerSection.style.setProperty(
+            "display",
+            "block",
+            "important"
+        );
+
+        homeButton.classList.remove("active");
+        historyButton.classList.remove("active");
+        moreButton.classList.add("active");
+        wishlistButton.classList.remove("active");
+        statsButton.classList.remove("active");
+
+        displayAccountsManager();
+
+        window.scrollTo(0, 0);
+
+    });
+
+}
+
+
+function displayAccountsManager() {
+
+    const accounts =
+        JSON.parse(
+            localStorage.getItem("financeAccounts")
+        ) || {
+            acc1: 0,
+            acc2: 0,
+            cash: 0
+        };
+
+    accountsManagerList.innerHTML = "";
+
+    const accountNames = {
+        acc1: "ACC-1",
+        acc2: "ACC-2",
+        cash: "Cash"
+    };
+
+    Object.keys(accounts).forEach(function (accountId) {
+
+        const amount =
+            Number(accounts[accountId]) || 0;
+
+        const card =
+            document.createElement("div");
+
+        card.className = "account-manager-card";
+
+        card.innerHTML = `
+            <div>
+                <strong>
+                    ${accountNames[accountId] || accountId}
+                </strong>
+                <p>
+                    ₹${amount.toLocaleString("en-IN")}
+                </p>
+            </div>
+        `;
+
+        accountsManagerList.appendChild(card);
+
+    });
+
+}
