@@ -3800,10 +3800,16 @@ function displayAccountsManager() {
 
     accountsManagerList.innerHTML = "";
 
+    const savedAccountNames =
+        JSON.parse(
+            localStorage.getItem("financeAccountNames")
+        ) || {};
+    
     const accountNames = {
         acc1: "ACC-1",
         acc2: "ACC-2",
-        cash: "Cash"
+        cash: "Cash",
+        ...savedAccountNames
     };
 
     Object.keys(accounts).forEach(function (accountId) {
@@ -3828,6 +3834,69 @@ function displayAccountsManager() {
         `;
 
         accountsManagerList.appendChild(card);
+
+    });
+
+}
+// =================================
+// ADD ACCOUNT / SOURCE
+// =================================
+
+const addAccountButton =
+    document.getElementById("addAccountButton");
+
+if (addAccountButton) {
+
+    addAccountButton.addEventListener("click", function () {
+
+        const accountName =
+            prompt("Enter account / source name:");
+
+        if (accountName === null) {
+            return;
+        }
+
+        const trimmedName =
+            accountName.trim();
+
+        if (!trimmedName) {
+            alert("Please enter a name.");
+            return;
+        }
+
+        const accounts =
+            JSON.parse(
+                localStorage.getItem("financeAccounts")
+            ) || {
+                acc1: 0,
+                acc2: 0,
+                cash: 0
+            };
+
+        const accountNames =
+            JSON.parse(
+                localStorage.getItem("financeAccountNames")
+            ) || {};
+
+        const accountId =
+            "account_" + Date.now();
+
+        accounts[accountId] = 0;
+
+        accountNames[accountId] =
+            trimmedName;
+
+        localStorage.setItem(
+            "financeAccounts",
+            JSON.stringify(accounts)
+        );
+
+        localStorage.setItem(
+            "financeAccountNames",
+            JSON.stringify(accountNames)
+        );
+
+        displayAccountsManager();
 
     });
 
