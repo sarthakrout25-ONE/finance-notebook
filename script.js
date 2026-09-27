@@ -3586,7 +3586,7 @@ exportBackupBtn.addEventListener("click", function () {
 
         wishlist: JSON.parse(
             localStorage.getItem("financeWishlist")
-        ) || []
+        ) || [],
         accountNames:
             JSON.parse(
                 localStorage.getItem("financeAccountNames")
