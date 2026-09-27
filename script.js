@@ -560,6 +560,7 @@ function isCurrentMonth(transactionDate) {
 // Initial display
 
 updateTotalBalance();
+updateAccountDropdowns();
 
 // ===============================
 // Add Transaction Menu
@@ -3143,7 +3144,6 @@ function displayOwedEntries() {
             updateTotalIncome();
             updateTotalExpense();
             displayRecentTransactions();
-            updateAccountDropdowns();
         });
 
             });
