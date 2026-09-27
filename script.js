@@ -28,26 +28,92 @@ function saveAccounts() {
 
 function updateTotalBalance() {
 
-    const total =
-        accounts.acc1 +
-        accounts.acc2 +
-        accounts.cash;
+    const accounts =
+        JSON.parse(
+            localStorage.getItem("financeAccounts")
+        ) || {
+            acc1: 0,
+            acc2: 0,
+            cash: 0
+        };
 
+    const savedAccountNames =
+        JSON.parse(
+            localStorage.getItem("financeAccountNames")
+        ) || {};
+
+    const accountNames = {
+        acc1: "ACC-1",
+        acc2: "ACC-2",
+        cash: "Cash",
+        ...savedAccountNames
+    };
+
+    const total =
+        Object.values(accounts).reduce(
+            function (sum, amount) {
+                return sum + (Number(amount) || 0);
+            },
+            0
+        );
 
     document.getElementById("totalBalance").textContent =
         `₹${total.toLocaleString("en-IN")}`;
 
 
-    document.getElementById("acc1Balance").textContent =
-        `₹${accounts.acc1.toLocaleString("en-IN")}`;
+    // Update Home account names and balances
+
+    const acc1Name =
+        document.getElementById("acc1Name");
+
+    const acc1Balance =
+        document.getElementById("acc1Balance");
+
+    const acc2Name =
+        document.getElementById("acc2Name");
+
+    const acc2Balance =
+        document.getElementById("acc2Balance");
+
+    const cashName =
+        document.getElementById("cashName");
+
+    const cashBalance =
+        document.getElementById("cashBalance");
 
 
-    document.getElementById("acc2Balance").textContent =
-        `₹${accounts.acc2.toLocaleString("en-IN")}`;
+    if (acc1Name) {
+        acc1Name.textContent =
+            accountNames.acc1 || "ACC-1";
+    }
+
+    if (acc1Balance) {
+        acc1Balance.textContent =
+            `₹${(Number(accounts.acc1) || 0).toLocaleString("en-IN")}`;
+    }
 
 
-    document.getElementById("cashBalance").textContent =
-        `₹${accounts.cash.toLocaleString("en-IN")}`;
+    if (acc2Name) {
+        acc2Name.textContent =
+            accountNames.acc2 || "ACC-2";
+    }
+
+    if (acc2Balance) {
+        acc2Balance.textContent =
+            `₹${(Number(accounts.acc2) || 0).toLocaleString("en-IN")}`;
+    }
+
+
+    if (cashName) {
+        cashName.textContent =
+            accountNames.cash || "Cash";
+    }
+
+    if (cashBalance) {
+        cashBalance.textContent =
+            `₹${(Number(accounts.cash) || 0).toLocaleString("en-IN")}`;
+    }
+
 }
     // ===============================
     // Display Recent Transactions
