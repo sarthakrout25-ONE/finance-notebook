@@ -3615,6 +3615,7 @@ function hideAllSections() {
     statisticsSection.style.setProperty("display", "none", "important");
     backupSection.style.setProperty("display", "none", "important");
     pinSection.style.setProperty("display", "none", "important");
+    accountsManagerSection.style.setProperty("display", "none", "important");
 }
 // =========================
 // HOME - VIEW ALL HISTORY
