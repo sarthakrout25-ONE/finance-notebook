@@ -3827,13 +3827,58 @@ function displayAccountsManager() {
                 <strong>
                     ${accountNames[accountId] || accountId}
                 </strong>
+        
                 <p>
                     ₹${amount.toLocaleString("en-IN")}
                 </p>
             </div>
+        
+            <button
+                class="rename-account-button"
+                data-account-id="${accountId}"
+            >
+                Rename
+            </button>
         `;
 
         accountsManagerList.appendChild(card);
+        const renameButton =
+            card.querySelector(".rename-account-button");
+        
+        renameButton.addEventListener("click", function () {
+        
+            const currentName =
+                accountNames[accountId] || accountId;
+        
+            const newName =
+                prompt(
+                    "Enter new account / source name:",
+                    currentName
+                );
+        
+            if (newName === null) {
+                return;
+            }
+        
+            const trimmedName =
+                newName.trim();
+        
+            if (!trimmedName) {
+                alert("Please enter a name.");
+                return;
+            }
+        
+            accountNames[accountId] =
+                trimmedName;
+        
+            localStorage.setItem(
+                "financeAccountNames",
+                JSON.stringify(accountNames)
+            );
+        
+            displayAccountsManager();
+        
+        });
 
     });
 
