@@ -115,6 +115,71 @@ function updateTotalBalance() {
     });
 
 }
+// =================================
+// DYNAMIC ACCOUNT DROPDOWNS
+// =================================
+
+function updateAccountDropdowns() {
+
+    const accounts =
+        JSON.parse(
+            localStorage.getItem("financeAccounts")
+        ) || {};
+
+    const savedAccountNames =
+        JSON.parse(
+            localStorage.getItem("financeAccountNames")
+        ) || {};
+
+    const defaultNames = {
+        acc1: "ACC-1",
+        acc2: "ACC-2",
+        cash: "Cash"
+    };
+
+    const accountNames = {
+        ...defaultNames,
+        ...savedAccountNames
+    };
+
+
+    const dropdownIds = [
+        "expenseAccount",
+        "incomeAccount",
+        "transferFrom",
+        "transferTo"
+    ];
+
+
+    dropdownIds.forEach(function (dropdownId) {
+
+        const dropdown =
+            document.getElementById(dropdownId);
+
+        if (!dropdown) {
+            return;
+        }
+
+        dropdown.innerHTML = "";
+
+
+        Object.keys(accounts).forEach(function (accountId) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = accountId;
+
+            option.textContent =
+                accountNames[accountId] || accountId;
+
+            dropdown.appendChild(option);
+
+        });
+
+    });
+
+}
 
     // ===============================
     // Display Recent Transactions
@@ -3078,6 +3143,7 @@ function displayOwedEntries() {
             updateTotalIncome();
             updateTotalExpense();
             displayRecentTransactions();
+            updateAccountDropdowns();
         });
 
             });
