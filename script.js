@@ -2003,11 +2003,11 @@ function updateStatisticsAccounts() {
     const transactions =
         JSON.parse(localStorage.getItem("financeTransactions")) || [];
 
-    const accountTotals = {
-        acc1: 0,
-        acc2: 0,
-        cash: 0
-    };
+    const accountTotals = {};
+
+    Object.keys(accounts).forEach(function (accountId) {
+        accountTotals[accountId] = 0;
+    });
 
     transactions.forEach(function (transaction) {
         if (transaction.type !== "expense") return;
@@ -2174,9 +2174,6 @@ saveOwed.addEventListener("click", function () {
                 <label>Deduct from</label>
 
                 <select id="lendAccountSelect">
-                    <option value="acc1">ACC-1</option>
-                    <option value="acc2">ACC-2</option>
-                    <option value="cash">Cash</option>
                 </select>
 
                 <button id="confirmLendButton">
@@ -2191,6 +2188,38 @@ saveOwed.addEventListener("click", function () {
         `;
 
         document.body.appendChild(overlay);
+        const lendAccountSelect =
+            overlay.querySelector("#lendAccountSelect");
+        
+        const savedAccountNames =
+            JSON.parse(
+                localStorage.getItem("financeAccountNames")
+            ) || {};
+        
+        const defaultNames = {
+            acc1: "ACC-1",
+            acc2: "ACC-2",
+            cash: "Cash"
+        };
+        
+        const accountNames = {
+            ...defaultNames,
+            ...savedAccountNames
+        };
+        
+        Object.keys(accounts).forEach(function (accountId) {
+        
+            const option =
+                document.createElement("option");
+        
+            option.value = accountId;
+        
+            option.textContent =
+                accountNames[accountId] || accountId;
+        
+            lendAccountSelect.appendChild(option);
+        
+        });
 
         const confirmLendButton =
             overlay.querySelector("#confirmLendButton");
@@ -2813,19 +2842,6 @@ function displayOwedEntries() {
                         <label>${label}</label>
 
                         <select id="paymentAccountSelect">
-
-                            <option value="acc1">
-                                ACC-1
-                            </option>
-
-                            <option value="acc2">
-                                ACC-2
-                            </option>
-
-                            <option value="cash">
-                                Cash
-                            </option>
-
                         </select>
 
                         <button id="confirmPaymentButton">
@@ -2840,6 +2856,38 @@ function displayOwedEntries() {
                 `;
 
                 document.body.appendChild(overlay);
+                const paymentAccountSelect =
+                    overlay.querySelector("#paymentAccountSelect");
+                
+                const savedAccountNames =
+                    JSON.parse(
+                        localStorage.getItem("financeAccountNames")
+                    ) || {};
+                
+                const defaultNames = {
+                    acc1: "ACC-1",
+                    acc2: "ACC-2",
+                    cash: "Cash"
+                };
+                
+                const accountNames = {
+                    ...defaultNames,
+                    ...savedAccountNames
+                };
+                
+                Object.keys(accounts).forEach(function (accountId) {
+                
+                    const option =
+                        document.createElement("option");
+                
+                    option.value = accountId;
+                
+                    option.textContent =
+                        accountNames[accountId] || accountId;
+                
+                    paymentAccountSelect.appendChild(option);
+                
+                });
 
                 const confirmPaymentButton =
                     overlay.querySelector(
