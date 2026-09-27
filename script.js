@@ -3833,12 +3833,23 @@ function displayAccountsManager() {
                 </p>
             </div>
         
-            <button
-                class="rename-account-button"
-                data-account-id="${accountId}"
-            >
-                Rename
-            </button>
+            <div class="account-manager-actions">
+        
+                <button
+                    class="rename-account-button"
+                    data-account-id="${accountId}"
+                >
+                    Rename
+                </button>
+        
+                <button
+                    class="delete-account-button"
+                    data-account-id="${accountId}"
+                >
+                    Delete
+                </button>
+        
+            </div>
         `;
 
         accountsManagerList.appendChild(card);
@@ -3870,6 +3881,55 @@ function displayAccountsManager() {
         
             accountNames[accountId] =
                 trimmedName;
+        
+            localStorage.setItem(
+                "financeAccountNames",
+                JSON.stringify(accountNames)
+            );
+        
+            displayAccountsManager();
+        
+        });
+        const deleteButton =
+            card.querySelector(".delete-account-button");
+        
+        deleteButton.addEventListener("click", function () {
+        
+            if (amount !== 0) {
+        
+                alert(
+                    "This account still has money. Move the money first."
+                );
+        
+                return;
+            }
+        
+            const confirmed =
+                confirm(
+                    "Delete this account / source?"
+                );
+        
+            if (!confirmed) {
+                return;
+            }
+        
+            const accounts =
+                JSON.parse(
+                    localStorage.getItem("financeAccounts")
+                ) || {};
+        
+            const accountNames =
+                JSON.parse(
+                    localStorage.getItem("financeAccountNames")
+                ) || {};
+        
+            delete accounts[accountId];
+            delete accountNames[accountId];
+        
+            localStorage.setItem(
+                "financeAccounts",
+                JSON.stringify(accounts)
+            );
         
             localStorage.setItem(
                 "financeAccountNames",
