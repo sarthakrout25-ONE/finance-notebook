@@ -369,17 +369,13 @@ function updateAccountDropdowns() {
 
                 item.className = "recent-item";
 
-                const fromName = {
-                    acc1: "ACC-1",
-                    acc2: "ACC-2",
-                    cash: "Cash"
-                }[transaction.fromAccount];
-
-                const toName = {
-                    acc1: "ACC-1",
-                    acc2: "ACC-2",
-                    cash: "Cash"
-                }[transaction.toAccount];
+                const fromName =
+                    accountNames[transaction.fromAccount] ||
+                    transaction.fromAccount;
+                
+                const toName =
+                    accountNames[transaction.toAccount] ||
+                    transaction.toAccount;
 
 
                 item.innerHTML = `
@@ -3591,6 +3587,13 @@ exportBackupBtn.addEventListener("click", function () {
         wishlist: JSON.parse(
             localStorage.getItem("financeWishlist")
         ) || []
+        accountNames:
+            JSON.parse(
+                localStorage.getItem("financeAccountNames")
+            ) || {},
+        
+        userName:
+            localStorage.getItem("financeUserName") || ""
     };
 
     const backupJSON =
@@ -3654,6 +3657,23 @@ importBackupBtn.addEventListener("click", function () {
                     cash: 0
                 })
             );
+            if (backupData.accountNames) {
+
+                localStorage.setItem(
+                    "financeAccountNames",
+                    JSON.stringify(backupData.accountNames)
+                );
+            
+            }
+            
+            if (backupData.userName) {
+            
+                localStorage.setItem(
+                    "financeUserName",
+                    backupData.userName
+                );
+            
+            }
 
             localStorage.setItem(
                 "financeTransactions",
