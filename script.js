@@ -218,13 +218,25 @@ function updateAccountDropdowns() {
 
         recentTransactions.forEach(function (transaction) {
 
-            const accountName = {
-
+            const savedAccountNames =
+                JSON.parse(
+                    localStorage.getItem("financeAccountNames")
+                ) || {};
+            
+            const defaultNames = {
                 acc1: "ACC-1",
                 acc2: "ACC-2",
                 cash: "Cash"
-
-            }[transaction.account];
+            };
+            
+            const accountNames = {
+                ...defaultNames,
+                ...savedAccountNames
+            };
+            
+            const accountName =
+                accountNames[transaction.account] ||
+                transaction.account;
 
 
             // Expense
@@ -1271,12 +1283,20 @@ function displayTransactionHistory() {
         item.dataset.id = transaction.id;
 
 
-        const accountName = {
-
+        const savedAccountNames =
+            JSON.parse(
+                localStorage.getItem("financeAccountNames")
+            ) || {};
+        
+        const defaultNames = {
             acc1: "ACC-1",
             acc2: "ACC-2",
             cash: "Cash"
-
+        };
+        
+        const accountName = {
+            ...defaultNames,
+            ...savedAccountNames
         };
 
 
@@ -2005,10 +2025,20 @@ function updateStatisticsAccounts() {
 
     accountList.innerHTML = "";
 
-    const accountNames = {
+    const savedAccountNames =
+        JSON.parse(
+            localStorage.getItem("financeAccountNames")
+        ) || {};
+    
+    const defaultNames = {
         acc1: "ACC-1",
         acc2: "ACC-2",
         cash: "Cash"
+    };
+    
+    const accountNames = {
+        ...defaultNames,
+        ...savedAccountNames
     };
 
     Object.keys(accountTotals).forEach(function (account) {
