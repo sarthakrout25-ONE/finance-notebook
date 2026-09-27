@@ -2093,3 +2093,70 @@ body,
 
     cursor: pointer;
 }
+/* =================================
+   ACCOUNTS & SOURCES
+   ================================= */
+
+.accounts-manager-section {
+    padding-bottom: 100px;
+}
+
+.add-account-button {
+    display: block;
+
+    width: 100%;
+    max-width: 420px;
+
+    margin: 0 auto 20px;
+
+    padding: 14px;
+
+    background: #39ff14;
+    color: #000;
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.accounts-manager-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.account-manager-card {
+    background: #050505;
+
+    border: 1px solid #00e5ff;
+    border-radius: 10px;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+}
+
+.account-manager-card strong {
+    display: block;
+
+    color: #39ff14;
+
+    font-family: "Courier New", monospace;
+    font-size: 20px;
+
+    margin-bottom: 8px;
+}
+
+.account-manager-card p {
+    color: #00e5ff;
+
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+
+    margin: 0;
+}
