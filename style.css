@@ -2196,3 +2196,7 @@ body,
     color: #000;
     border: 1px solid #ff3caa;
 }
+/* Hide Accounts & Sources until opened */
+#accountsManagerSection {
+    display: none;
+}
