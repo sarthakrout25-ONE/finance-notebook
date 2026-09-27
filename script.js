@@ -25,29 +25,31 @@ function saveAccounts() {
 
 
 // Update account display
-
 function updateTotalBalance() {
 
     const accounts =
         JSON.parse(
             localStorage.getItem("financeAccounts")
-        ) || {
-            acc1: 0,
-            acc2: 0,
-            cash: 0
-        };
+        ) || {};
 
     const savedAccountNames =
         JSON.parse(
             localStorage.getItem("financeAccountNames")
         ) || {};
 
-    const accountNames = {
+    const defaultNames = {
         acc1: "ACC-1",
         acc2: "ACC-2",
-        cash: "Cash",
+        cash: "Cash"
+    };
+
+    const accountNames = {
+        ...defaultNames,
         ...savedAccountNames
     };
+
+
+    // Calculate total money
 
     const total =
         Object.values(accounts).reduce(
@@ -57,64 +59,63 @@ function updateTotalBalance() {
             0
         );
 
+
     document.getElementById("totalBalance").textContent =
         `₹${total.toLocaleString("en-IN")}`;
 
 
-    // Update Home account names and balances
+    // Generate account cards
 
-    const acc1Name =
-        document.getElementById("acc1Name");
+    const homeAccounts =
+        document.getElementById("homeAccounts");
 
-    const acc1Balance =
-        document.getElementById("acc1Balance");
-
-    const acc2Name =
-        document.getElementById("acc2Name");
-
-    const acc2Balance =
-        document.getElementById("acc2Balance");
-
-    const cashName =
-        document.getElementById("cashName");
-
-    const cashBalance =
-        document.getElementById("cashBalance");
-
-
-    if (acc1Name) {
-        acc1Name.textContent =
-            accountNames.acc1 || "ACC-1";
+    if (!homeAccounts) {
+        return;
     }
 
-    if (acc1Balance) {
-        acc1Balance.textContent =
-            `₹${(Number(accounts.acc1) || 0).toLocaleString("en-IN")}`;
-    }
+    homeAccounts.innerHTML = "";
 
 
-    if (acc2Name) {
-        acc2Name.textContent =
-            accountNames.acc2 || "ACC-2";
-    }
+    Object.keys(accounts).forEach(function (accountId) {
 
-    if (acc2Balance) {
-        acc2Balance.textContent =
-            `₹${(Number(accounts.acc2) || 0).toLocaleString("en-IN")}`;
-    }
+        const amount =
+            Number(accounts[accountId]) || 0;
+
+        const name =
+            accountNames[accountId] || accountId;
 
 
-    if (cashName) {
-        cashName.textContent =
-            accountNames.cash || "Cash";
-    }
+        const card =
+            document.createElement("div");
 
-    if (cashBalance) {
-        cashBalance.textContent =
-            `₹${(Number(accounts.cash) || 0).toLocaleString("en-IN")}`;
-    }
+        card.className = "account-card";
+
+
+        const icon =
+            accountId === "cash"
+                ? "💵"
+                : "🏦";
+
+
+        card.innerHTML = `
+            <span>${icon}</span>
+
+            <div>
+                <p>${name}</p>
+
+                <h3>
+                    ₹${amount.toLocaleString("en-IN")}
+                </h3>
+            </div>
+        `;
+
+
+        homeAccounts.appendChild(card);
+
+    });
 
 }
+
     // ===============================
     // Display Recent Transactions
     // ===============================
