@@ -4019,7 +4019,9 @@ function displayAccountsManager() {
                 "financeAccountNames",
                 JSON.stringify(accountNames)
             );
-        
+            
+            updateAccountDropdowns();
+            
             displayAccountsManager();
         
         });
@@ -4068,7 +4070,9 @@ function displayAccountsManager() {
                 "financeAccountNames",
                 JSON.stringify(accountNames)
             );
-        
+            
+            updateAccountDropdowns();
+            
             displayAccountsManager();
         
         });
@@ -4133,6 +4137,7 @@ if (addAccountButton) {
             "financeAccountNames",
             JSON.stringify(accountNames)
         );
+        updateAccountDropdowns();
 
         displayAccountsManager();
 
