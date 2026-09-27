@@ -2160,3 +2160,39 @@ body,
 
     margin: 0;
 }
+/* =================================
+   ACCOUNT ACTION BUTTONS
+   ================================= */
+
+.account-manager-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.rename-account-button,
+.delete-account-button {
+    flex: 1;
+
+    padding: 10px;
+
+    border-radius: 6px;
+
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.rename-account-button {
+    background: #00e5ff;
+    color: #000;
+    border: 1px solid #00e5ff;
+}
+
+.delete-account-button {
+    background: #ff3caa;
+    color: #000;
+    border: 1px solid #ff3caa;
+}
