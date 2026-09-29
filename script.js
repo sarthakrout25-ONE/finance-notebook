@@ -3563,7 +3563,7 @@ function displayWishlistItems() {
                     type: "expense",
                     amount: price,
                     category: "Wishlist",
-                    accountId: selectedAccountId,
+                    account: selectedAccountId,
                     note: item.name,
                     date: new Date().toISOString().split("T")[0]
                 });
