@@ -4265,7 +4265,20 @@ function displayAccountsManager() {
         
         deleteButton.addEventListener("click", function () {
 
-            if (amount !== 0) {
+            const currentAccounts =
+                JSON.parse(
+                    localStorage.getItem("financeAccounts")
+                ) || {};
+        
+            const currentAccountNames =
+                JSON.parse(
+                    localStorage.getItem("financeAccountNames")
+                ) || {};
+        
+            const currentAmount =
+                Number(currentAccounts[accountId]) || 0;
+        
+            if (currentAmount !== 0) {
         
                 alert(
                     "This account still has money. Move the money first."
@@ -4283,33 +4296,19 @@ function displayAccountsManager() {
                 return;
             }
         
-            // Get the latest saved accounts
-            const savedAccounts =
-                JSON.parse(
-                    localStorage.getItem("financeAccounts")
-                ) || {};
+            delete currentAccounts[accountId];
+            delete currentAccountNames[accountId];
         
-            const savedAccountNames =
-                JSON.parse(
-                    localStorage.getItem("financeAccountNames")
-                ) || {};
-        
-            // Delete ONLY the selected account
-            delete savedAccounts[accountId];
-            delete savedAccountNames[accountId];
-        
-            // Save the updated accounts
             localStorage.setItem(
                 "financeAccounts",
-                JSON.stringify(savedAccounts)
+                JSON.stringify(currentAccounts)
             );
         
             localStorage.setItem(
                 "financeAccountNames",
-                JSON.stringify(savedAccountNames)
+                JSON.stringify(currentAccountNames)
             );
         
-            // Refresh everything
             updateTotalBalance();
             updateAccountDropdowns();
             displayAccountsManager();
