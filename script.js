@@ -4269,20 +4269,7 @@ function displayAccountsManager() {
         
         deleteButton.addEventListener("click", function () {
 
-            const currentAccounts =
-                JSON.parse(
-                    localStorage.getItem("financeAccounts")
-                ) || {};
-        
-            const currentAccountNames =
-                JSON.parse(
-                    localStorage.getItem("financeAccountNames")
-                ) || {};
-        
-            const currentAmount =
-                Number(currentAccounts[accountId]) || 0;
-        
-            if (currentAmount !== 0) {
+            if (amount !== 0) {
         
                 alert(
                     "This account still has money. Move the money first."
@@ -4300,19 +4287,26 @@ function displayAccountsManager() {
                 return;
             }
         
-            delete currentAccounts[accountId];
-            delete currentAccountNames[accountId];
+            // Delete from the main accounts object
+            delete accounts[accountId];
         
+            // Delete saved name
+            delete accountNames[accountId];
+        
+            // Save the updated accounts
             localStorage.setItem(
                 "financeAccounts",
-                JSON.stringify(currentAccounts)
+                JSON.stringify(accounts)
             );
         
             localStorage.setItem(
                 "financeAccountNames",
-                JSON.stringify(currentAccountNames)
+                JSON.stringify(accountNames)
             );
         
+            // Refresh the rest of the app
+            updateTotalBalance();
+            updateAccountDropdowns();
             displayAccountsManager();
         
         });
