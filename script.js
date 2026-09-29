@@ -4309,8 +4309,6 @@ function displayAccountsManager() {
                 JSON.stringify(currentAccountNames)
             );
         
-            updateTotalBalance();
-            updateAccountDropdowns();
             displayAccountsManager();
         
         });
