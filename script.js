@@ -30,7 +30,11 @@ function updateTotalBalance() {
     const accounts =
         JSON.parse(
             localStorage.getItem("financeAccounts")
-        ) || {};
+        ) || {
+            acc1: 0,
+            acc2: 0,
+            cash: 0
+        };
 
     const savedAccountNames =
         JSON.parse(
@@ -124,7 +128,11 @@ function updateAccountDropdowns() {
     const accounts =
         JSON.parse(
             localStorage.getItem("financeAccounts")
-        ) || {};
+        ) || {
+            acc1: 0,
+            acc2: 0,
+            cash: 0
+        };
 
     const savedAccountNames =
         JSON.parse(
@@ -4204,15 +4212,6 @@ if (addAccountButton) {
             return;
         }
 
-        const accounts =
-            JSON.parse(
-                localStorage.getItem("financeAccounts")
-            ) || {
-                acc1: 0,
-                acc2: 0,
-                cash: 0
-            };
-
         const accountNames =
             JSON.parse(
                 localStorage.getItem("financeAccountNames")
@@ -4235,6 +4234,10 @@ if (addAccountButton) {
             "financeAccountNames",
             JSON.stringify(accountNames)
         );
+        saveAccounts();
+
+        updateTotalBalance();
+        
         updateAccountDropdowns();
 
         displayAccountsManager();
