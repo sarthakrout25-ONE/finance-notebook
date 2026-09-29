@@ -11,6 +11,10 @@ let accounts = JSON.parse(localStorage.getItem("financeAccounts")) || {
     acc2: 0,
     cash: 0
 };
+localStorage.setItem(
+    "financeAccounts",
+    JSON.stringify(accounts)
+);
 
 
 // Save accounts
