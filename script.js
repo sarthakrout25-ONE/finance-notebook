@@ -4283,31 +4283,20 @@ function displayAccountsManager() {
                 return;
             }
         
-            const accounts =
-                JSON.parse(
-                    localStorage.getItem("financeAccounts")
-                ) || {};
-        
-            const accountNames =
-                JSON.parse(
-                    localStorage.getItem("financeAccountNames")
-                ) || {};
-        
+            // Delete only the selected account
+
             delete accounts[accountId];
             delete accountNames[accountId];
-        
-            localStorage.setItem(
-                "financeAccounts",
-                JSON.stringify(accounts)
-            );
-        
+            
+            saveAccounts();
+            
             localStorage.setItem(
                 "financeAccountNames",
                 JSON.stringify(accountNames)
             );
             
+            updateTotalBalance();
             updateAccountDropdowns();
-            
             displayAccountsManager();
         
         });
