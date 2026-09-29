@@ -1272,7 +1272,7 @@ function displayTransactionHistory() {
     // Newest first
 
     const historyTransactions =
-        filteredTransactions.slice().reverse();
+        filteredTransactions;
 
     container.innerHTML = "";
 
