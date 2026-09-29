@@ -3460,27 +3460,156 @@ function displayWishlistItems() {
 
         card.querySelector(".purchased-wishlist")
             .addEventListener("click", function () {
-
+        
+                const price = Number(item.price) || 0;
+        
+                const savedAccounts =
+                    JSON.parse(
+                        localStorage.getItem("financeAccounts")
+                    ) || {
+                        acc1: 0,
+                        acc2: 0,
+                        cash: 0
+                    };
+        
+                const savedAccountNames =
+                    JSON.parse(
+                        localStorage.getItem("financeAccountNames")
+                    ) || {};
+        
+                const defaultNames = {
+                    acc1: "ACC-1",
+                    acc2: "ACC-2",
+                    cash: "Cash"
+                };
+        
+                const accountNames = {
+                    ...defaultNames,
+                    ...savedAccountNames
+                };
+        
+                // Create account selection text
+                const accountOptions =
+                    Object.keys(savedAccounts)
+                        .map(function (accountId, index) {
+                            return (
+                                (index + 1) +
+                                ". " +
+                                (accountNames[accountId] || accountId)
+                            );
+                        })
+                        .join("\n");
+        
+                const choice =
+                    prompt(
+                        "Pay for this wishlist item from which account?\n\n" +
+                        accountOptions +
+                        "\n\nEnter the account number:"
+                    );
+        
+                if (choice === null) {
+                    return;
+                }
+        
+                const selectedIndex =
+                    Number(choice) - 1;
+        
+                const accountIds =
+                    Object.keys(savedAccounts);
+        
+                if (
+                    !Number.isInteger(selectedIndex) ||
+                    selectedIndex < 0 ||
+                    selectedIndex >= accountIds.length
+                ) {
+                    alert("Invalid account selection.");
+                    return;
+                }
+        
+                const selectedAccountId =
+                    accountIds[selectedIndex];
+        
+                const currentBalance =
+                    Number(savedAccounts[selectedAccountId]) || 0;
+        
+                // Check balance
+                if (currentBalance < price) {
+                    alert(
+                        "Insufficient balance in " +
+                        (accountNames[selectedAccountId] ||
+                            selectedAccountId) +
+                        "."
+                    );
+                    return;
+                }
+        
+                // Deduct money
+                savedAccounts[selectedAccountId] =
+                    currentBalance - price;
+        
+                localStorage.setItem(
+                    "financeAccounts",
+                    JSON.stringify(savedAccounts)
+                );
+        
+                // Create Wishlist expense transaction
+                const transactions =
+                    JSON.parse(
+                        localStorage.getItem("financeTransactions")
+                    ) || [];
+        
+                transactions.unshift({
+                    id: Date.now(),
+                    type: "expense",
+                    amount: price,
+                    category: "Wishlist",
+                    account: selectedAccountId,
+                    description: item.name,
+                    date: new Date().toISOString().split("T")[0]
+                });
+        
+                localStorage.setItem(
+                    "financeTransactions",
+                    JSON.stringify(transactions)
+                );
+        
+                // Mark wishlist item as purchased
                 wishlistItems =
                     wishlistItems.map(function (wishlistItem) {
-
+        
                         if (wishlistItem.id === item.id) {
                             wishlistItem.purchased = true;
                         }
-
+        
                         return wishlistItem;
                     });
-
+        
                 localStorage.setItem(
                     "financeWishlist",
                     JSON.stringify(wishlistItems)
                 );
-
+        
+                // Refresh everything
                 displayWishlistItems();
                 updateWishlistTotal();
+                updateTotalBalance();
+        
+                if (typeof updateTotalExpense === "function") {
+                    updateTotalExpense();
+                }
+        
+                if (typeof updateStatistics === "function") {
+                    updateStatistics();
+                }
+        
+                if (typeof displayRecentTransactions === "function") {
+                    displayRecentTransactions();
+                }
+        
+                alert(
+                    "Wishlist purchase recorded successfully."
+                );
             });
-
-
         // Delete button
 
         card.querySelector(".delete-wishlist")
