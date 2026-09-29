@@ -4264,7 +4264,7 @@ function displayAccountsManager() {
             card.querySelector(".delete-account-button");
         
         deleteButton.addEventListener("click", function () {
-        
+
             if (amount !== 0) {
         
                 alert(
@@ -4283,18 +4283,33 @@ function displayAccountsManager() {
                 return;
             }
         
-            // Delete only the selected account
-
-            delete accounts[accountId];
-            delete accountNames[accountId];
-            
-            saveAccounts();
-            
+            // Get the latest saved accounts
+            const savedAccounts =
+                JSON.parse(
+                    localStorage.getItem("financeAccounts")
+                ) || {};
+        
+            const savedAccountNames =
+                JSON.parse(
+                    localStorage.getItem("financeAccountNames")
+                ) || {};
+        
+            // Delete ONLY the selected account
+            delete savedAccounts[accountId];
+            delete savedAccountNames[accountId];
+        
+            // Save the updated accounts
+            localStorage.setItem(
+                "financeAccounts",
+                JSON.stringify(savedAccounts)
+            );
+        
             localStorage.setItem(
                 "financeAccountNames",
-                JSON.stringify(accountNames)
+                JSON.stringify(savedAccountNames)
             );
-            
+        
+            // Refresh everything
             updateTotalBalance();
             updateAccountDropdowns();
             displayAccountsManager();
